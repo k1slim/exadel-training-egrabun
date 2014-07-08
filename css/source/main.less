@@ -25,13 +25,6 @@ html{
 .Question{
   display:none;
 }
-.rightBlock{
-  position:relative;
-  float:right;
-  width:250px;
-  margin:20px 30px 20px 0;
-  padding:10px;
-}
 .contentHead{
   background-color: lightgray;
   border:1px solid #aaaaaa;
@@ -67,8 +60,6 @@ html{
   border-radius:7px;
   margin:15px 0 0 20px;
   padding:15px;
-}
-.formQuest{
 
   ul{
     list-style: none;
@@ -76,9 +67,34 @@ html{
     padding:0;
 
     li{
+      border:1px solid lightgray;
+      border-bottom: 2px solid lightgray;
+      border-radius:7px;
       margin:5px;
+      padding:5px;
+
+      &:hover{
+        background-color: #baeef6;
+        border:1px solid #afe3eb;
+        border-bottom: 2px solid #afe3eb;
+        cursor: pointer;
+      }
     }
   }
+}
+.rightBlock{
+  position:relative;
+  float:right;
+  width:250px;
+  margin:20px 30px 20px 0;
+  padding:10px;
+}
+.info{
+  border:1px solid lightgray;
+  border-bottom: 2px solid lightgray;
+  border-radius:7px;
+  margin:15px 0 0 20px;
+  padding:15px;
 }
 .footer{
   clear:both;
