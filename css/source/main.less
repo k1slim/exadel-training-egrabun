@@ -26,10 +26,10 @@ html{
   display:none;
 }
 .contentHead{
-  background-color: lightgray;
+  background-color: @border-col;
   border:1px solid #aaaaaa;
   border-bottom:2px solid #aaaaaa;
-  border-radius:7px;
+  border-radius:@border-rad;
   padding:10px;
 }
 
@@ -39,25 +39,16 @@ html{
     list-style: none;
 
     li{
-      border:1px solid lightgray;
-      border-bottom: 2px solid lightgray;
-      border-radius:7px;
+      .border(@border-col,@border-rad);
       margin:7px 0;
       padding:10px;
 
-      &:hover{
-        background-color: #baeef6;
-        border:1px solid #afe3eb;
-        border-bottom: 2px solid #afe3eb;
-        cursor: pointer;
-      }
+    &.hoverMix(@hover-background-col,@hover-border-col);
     }
   }
 }
 .textQuest{
-  border:1px solid lightgray;
-  border-bottom: 2px solid lightgray;
-  border-radius:7px;
+  .border(@border-col,@border-rad);
   margin:15px 0 0 20px;
   padding:15px;
 
@@ -67,18 +58,11 @@ html{
     padding:0;
 
     li{
-      border:1px solid lightgray;
-      border-bottom: 2px solid lightgray;
-      border-radius:7px;
+      .border(@border-col,@border-rad);
       margin:5px;
       padding:5px;
 
-      &:hover{
-        background-color: #baeef6;
-        border:1px solid #afe3eb;
-        border-bottom: 2px solid #afe3eb;
-        cursor: pointer;
-      }
+      &
     }
   }
 }
@@ -90,9 +74,7 @@ html{
   padding:10px;
 }
 .info{
-  border:1px solid lightgray;
-  border-bottom: 2px solid lightgray;
-  border-radius:7px;
+  .border(@border-col,@border-rad);
   margin:15px 0 0 20px;
   padding:15px;
 }
