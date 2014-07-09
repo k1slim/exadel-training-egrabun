@@ -1,6 +1,6 @@
 (function(root){
 
-    var app={},numb=0;
+    var app={},numb= 0,iter= 0;
 
     app.openTest=function(nTest){
         var elem1=document.getElementById('leftBlock');
@@ -10,6 +10,19 @@
         numb++;
         app.addInfo('numb',numb);
         app.placeData('titlePlaceholder',quizData[nTest-1].title);
+        app.placeQuestions(quizData[nTest-1].questions[0]);
+        document.getElementById('Question').addEventListener("click",function(evt){app.getActionElement(evt,nTest)});
+    };
+
+    app.getActionElement = function(evt,nTest){
+        console.log(evt.target);
+        if(evt.target.className=='answ')
+        {
+            iter++;
+            console.log(iter,nTest);
+            app.placeQuestions(quizData[nTest-1].questions[iter]);
+        }
+
     };
 
     app.addInfo=function(id,per){
@@ -20,13 +33,29 @@
         document.getElementById(plhold).innerHTML=data;
     };
 
-
-   /* app.rightAnsv=function(e){
-        var qwerty=document.getElementById('ansv');
-
+    app.placeQuestions=function(elem){
+        document.getElementById('placeQuestionTest').innerHTML=elem.content;
+        var place=document.getElementsByClassName('answ');
+        for(var i=0;i<elem.answers.length;i++){
+            app.placeData(place[i].id,elem.answers[i]);
+        }
     };
 
-    app.addInfo=function(text,flag,rAnsv){
+ /*   app.addListener=function(className,flag,nTest){
+        var elems=document.getElementsByClassName(className);
+        console.log(elems[2].id);
+        console.log('iter=',iter);
+        console.log(nTest);
+        console.log(quizData[nTest-1].questions.length);
+
+        for(var i=0;i<elems.length;i++){
+            if(flag==1){
+                elems[i].innerHTML=quizData[i].title;
+            }
+            document.getElementById(elems[i].id).addEventListener("click",function(){app.placeQuestions(quizData[nTest-1].questions[iter],nTest)});
+        }
+
+
 
     };*/
 
@@ -38,19 +67,8 @@
 window.onload=function(){
     var elems=document.getElementsByClassName('testStr');
     for(var i=0;i<elems.length;i++){
-        document.getElementById(elems[i].id).addEventListener("click",function(){code.openTest(parseInt(this.id))});
-
-
-
+        elems[i].innerHTML=quizData[i].title;
+        document.getElementById(elems[i].id).addEventListener("click",function(){code.openTest(parseInt(this.id));console.log(this);});
     }
-
-
-
 }
-            /*==Listeners==*/
-/*document.getElementById('1test').addEventListener( "click",function(){code.openTest(1)}, false );
-document.getElementById('2test').addEventListener( "click", function(){code.openTest(2)}, false );
-document.getElementById('3test').addEventListener( "click", function(){code.openTest(3)}, false );
-document.getElementById('4test').addEventListener( "click", function(){code.openTest(4)}, false );
-document.getElementById('5test').addEventListener( "click", function(){code.openTest(5)}, false );*/
 
