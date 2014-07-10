@@ -20,8 +20,10 @@
             {
                 if(parseInt(evt.target.id)==quizData[nTestGlobal-1].questions[iter].right)
                     app.placeData('rightAnswerCounter',++rightAnsw);
-                else
+                else{
                     app.placeData('wrongAnswerCounter',++wrongAnsw);
+                    app.showAlertWindow('block','qwertyuiopqwertyuiopqwe rtyuiopqwertyuiopqwertyuiopqwe rtyuiopqwertyuiopq wertyuiopqwertyuio pqwertyuiopqwer tyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop');
+                }
 
                 app.placeData('numb',++numb);
             }
@@ -41,7 +43,7 @@
             }
             if(numb==quizData[nTestGlobal-1].questions.length+1)
             {
-                alert('End');
+                app.showAlertWindow('block','Молодэц,правильных ответов -'+numb+'.');
                 app.returnToMainPage();
             }
             if(flag==1){
@@ -63,10 +65,19 @@
     };
 
     app.placeQuestions=function(elem){
-        document.getElementById('placeQuestionTest').innerHTML=elem.content;
-        var place=document.getElementsByClassName('answ');
+        var place1=document.getElementById('placeQuestionTest');
+        place1.innerHTML=elem.content;
+        if(elem.image)
+        {
+            document.getElementById('placeImage').style.display='block';
+            document.getElementById('placeImage').src=elem.image;
+        }
+        else{
+            document.getElementById('placeImage').style.display='none';
+        }
+        var place2=document.getElementsByClassName('answ');
         for(var i=0;i<elem.answers.length;i++){
-            app.placeData(place[i].id,elem.answers[i]);
+            app.placeData(place2[i].id,elem.answers[i]);
         }
     };
 
@@ -85,6 +96,13 @@
         skipsQuest=[];
         flag=0;
     };
+    app.showAlertWindow=function(view,data){
+        var elem1=document.getElementById('alertWindow');
+        var elem2=document.getElementById('alertWindowBack');
+        var place=document.getElementById('textPlaceholder').innerHTML=data;
+        elem1.style.display=view;
+        elem2.style.display=view;
+    }
 
     root.code=app;
 
@@ -98,5 +116,6 @@ window.onload=function(){
         document.getElementById(elems[i].id).addEventListener("click",function(){code.openTest(parseInt(this.id))});
     }
     document.getElementById('Question').addEventListener("click",function(evt){code.getActionElement(evt)});
+    document.getElementById('closedAlertWindow').addEventListener("click",function(){code.showAlertWindow('none',' ')});
 }
 
