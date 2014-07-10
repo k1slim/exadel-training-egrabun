@@ -6,6 +6,7 @@ var quizData = [
                 content : "Текст вопроса1",
                 img     : "path/img.png",
                 right   : 1,
+                image   : "image/test1t.jpg",
                 answers : [
                     "вариант 1,1",
                     "вариант 2",
@@ -26,6 +27,7 @@ var quizData = [
                 content : "Текст вопроса3",
                 img     : "path/img.png",
                 right   : 2,
+                image   : "image/test_1_1.jpg",
                 answers : [
                     "вариант 1,3",
                     "вариант 222",
@@ -46,6 +48,7 @@ var quizData = [
                 content : "Текст вопроса3",
                 img     : "path/img.png",
                 right   : 2,
+                image   : "image/test_1_2.jpg",
                 answers : [
                     "вариант 1,5",
                     "вариант 222",
@@ -56,6 +59,7 @@ var quizData = [
                 content : "Текст вопроса3",
                 img     : "path/img.png",
                 right   : 2,
+                image   : "image/test_1_3.jpg",
                 answers : [
                     "вариант 1,6",
                     "вариант 222",
