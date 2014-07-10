@@ -1,3 +1,6 @@
+@import "var.less";
+@import "mix.less";
+
 html{
   background-color: gray;
 }
@@ -26,13 +29,9 @@ html{
   display:none;
 }
 .contentHead{
-  background-color: @border-col;
-  border:1px solid #aaaaaa;
-  border-bottom:2px solid #aaaaaa;
-  border-radius:@border-rad;
+  .contentHeadMix;
   padding:10px;
 }
-
 .listTest{
 
   ul{
@@ -43,7 +42,9 @@ html{
       margin:7px 0;
       padding:10px;
 
-    &.hoverMix(@hover-background-col,@hover-border-col);
+      &:hover{
+        .hoverMix(@hover-background-col,@hover-border-col);
+      }
     }
   }
 }
@@ -62,8 +63,20 @@ html{
       margin:5px;
       padding:5px;
 
-      &
+      &:hover{
+        .hoverMix(@hover-background-col,@hover-border-col);
+      }
     }
+  }
+}
+#skip{
+  .contentHeadMix;
+  padding:5px;
+  margin-left: 350px;
+  text-align: center;
+
+  &:hover{
+    .hoverMix(gray, #6a6a6a);
   }
 }
 .rightBlock{
