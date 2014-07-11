@@ -29,7 +29,7 @@ html{
   display:none;
 }
 .contentHead{
-  .contentHeadMix;
+  .contentHeadMix(@border-col,@border-rad,20px);
   padding:10px;
 }
 .listTest{
@@ -74,7 +74,7 @@ html{
   border-radius:@border-rad;
 }
 #skip{
-  .contentHeadMix;
+  .contentHeadMix(@border-col,@border-rad,16px);
   padding:5px;
   margin-left: 350px;
   text-align: center;
@@ -98,6 +98,7 @@ html{
 #alertWindow{
   display:none;
   .border(@border-col,@border-rad);
+  box-shadow: 0 0 6px rgb(233, 233, 233);
   background-color: white;
   position:fixed;
   top:35%;

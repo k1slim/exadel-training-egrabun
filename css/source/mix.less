@@ -1,3 +1,4 @@
+
 .border(@col,@rad){
   border:1px solid @col;
   border-bottom: 2px solid @col;
@@ -9,9 +10,11 @@
   border-bottom: 2px solid @br-col;
   cursor: pointer;
 }
-.contentHeadMix{
-  background-color: @border-col;
+.contentHeadMix(@br-col,@rad,@size){
+  background-color: @br-col;
   border:1px solid #aaaaaa;
   border-bottom:2px solid #aaaaaa;
-  border-radius:@border-rad;
+  border-radius:@rad;
+  font-size: @size;
+  font-weight: bold;
 }
