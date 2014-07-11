@@ -64,7 +64,7 @@
     };
 
     app.placeQuestions=function(elem){
-        var place1=document.getElementById('placeQuestionTest');
+        var place1=document.getElementById('placeQuestionText');
         var place2=document.getElementsByClassName('answ');
         var place3=document.getElementById('placeImage');
         for(var j=0;j<5;j++)
