@@ -22,35 +22,33 @@
                     app.placeData('rightAnswerCounter',++rightAnsw);
                 else{
                     app.placeData('wrongAnswerCounter',++wrongAnsw);
-                    app.showAlertWindow('block','qwertyuiopqwertyuiopqwe rtyuiopqwertyuiopqwertyuiopqwe rtyuiopqwertyuiopq wertyuiopqwertyuio pqwertyuiopqwer tyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop');
+                    app.showAlertWindow('block','qwertyuiopqwertyuiopqwe rtyuiopqwertyuiopqwertyuiopqwe rtyuiopqwertyuiopq wertyuiopqwertyuio pqwertyuiopqwer tyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop',1,quizData[nTestGlobal-1].questions[iter].right,parseInt(evt.target.id));
                 }
-
                 app.placeData('numb',++numb);
             }
-            else{
+            else
                 skipsQuest[iter]=1;
-            }
-            console.log('iter=',iter,'nTestGlobal=',nTestGlobal,skipsQuest,'flag=',flag);
-
-            if(iter==quizData[nTestGlobal-1].questions.length-1 && flag==0)
+            console.log('iter=',iter,'nTestGlobal=',nTestGlobal,'skipsQuestArray=',skipsQuest,'flag=',flag);
+            if(iter==quizData[nTestGlobal-1].questions.length-1 && flag==0 && skipsQuest.length!=0)
             {
                 flag=1;
-                alert('Пропущенные вопросы');
+                app.showAlertWindow('block','Пропущенные вопросы',0);
             }
             else{
-                iter++;
-                app.placeQuestions(quizData[nTestGlobal-1].questions[iter]);
+                if(numb!=quizData[nTestGlobal-1].questions.length+1){
+                    iter++;
+                    app.placeQuestions(quizData[nTestGlobal-1].questions[iter]);
+                }
             }
             if(numb==quizData[nTestGlobal-1].questions.length+1)
             {
-                app.showAlertWindow('block','Молодэц,правильных ответов -'+numb+'.');
+                app.showAlertWindow('block','Молодэц,правильных ответов - '+rightAnsw+'.',0);
                 app.returnToMainPage();
             }
             if(flag==1){
                 for(var i=0;i<skipsQuest.length;i++){
                     if(skipsQuest[i]==1){
                         skipsQuest[i]=0;
-                        console.log('newiter=',i);
                         iter=i;
                         break;
                     }
@@ -61,22 +59,26 @@
     };
 
     app.placeData=function(plhold,data){
-        document.getElementById(plhold).innerHTML=data;
+        var place=document.getElementById(plhold);
+        place.innerHTML=data;
     };
 
     app.placeQuestions=function(elem){
         var place1=document.getElementById('placeQuestionTest');
+        var place2=document.getElementsByClassName('answ');
+        var place3=document.getElementById('placeImage');
+        for(var j=0;j<5;j++)
+            place2[j].style.display='none';
         place1.innerHTML=elem.content;
         if(elem.image)
         {
-            document.getElementById('placeImage').style.display='block';
-            document.getElementById('placeImage').src=elem.image;
+            place3.style.display='block';
+            place3.src=elem.image;
         }
-        else{
-            document.getElementById('placeImage').style.display='none';
-        }
-        var place2=document.getElementsByClassName('answ');
+        else
+            place3.style.display='none';
         for(var i=0;i<elem.answers.length;i++){
+            place2[i].style.display='block';
             app.placeData(place2[i].id,elem.answers[i]);
         }
     };
@@ -93,16 +95,21 @@
         app.placeData('rightAnswerCounter',rightAnsw);
         wrongAnsw= 0;
         app.placeData('wrongAnswerCounter',wrongAnsw);
-        skipsQuest=[];
-        flag=0;
+        skipsQuest= [];
+        flag= 0;
     };
-    app.showAlertWindow=function(view,data){
+
+    app.showAlertWindow=function(view,data,flag,rightAnsw,yourAnsw){
         var elem1=document.getElementById('alertWindow');
         var elem2=document.getElementById('alertWindowBack');
-        var place=document.getElementById('textPlaceholder').innerHTML=data;
+        var place=document.getElementById('textPlaceholder');
         elem1.style.display=view;
         elem2.style.display=view;
-    }
+        if(flag!=1)
+            place.innerHTML=data;
+        else
+            place.innerHTML='Вы ответили: '+yourAnsw+'<br/>Правильный ответ: '+rightAnsw+'<br/><br/>'+data;
+    };
 
     root.code=app;
 
@@ -117,5 +124,5 @@ window.onload=function(){
     }
     document.getElementById('Question').addEventListener("click",function(evt){code.getActionElement(evt)});
     document.getElementById('closedAlertWindow').addEventListener("click",function(){code.showAlertWindow('none',' ')});
-}
+};
 
