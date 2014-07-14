@@ -3,7 +3,7 @@
     var quizApp=function(){
         this.contenerWithTests=document.getElementsByClassName('listTest')[0];
 
-        this.testModule = new TestModule;
+        this.testModule = new TestModule();
 
         this.numberOfTest=-1;
         this.data={};
