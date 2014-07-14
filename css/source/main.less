@@ -1,6 +1,13 @@
 @import "var.less";
 @import "mix.less";
 
+.open{
+  display:block;
+}
+.close{
+  display:none;
+}
+
 html{
   background-color: gray;
 }
@@ -25,9 +32,7 @@ html{
   margin:20px 0px 20px 50px;
   padding:10px;
 }
-.Question{
-  display:none;
-}
+
 .contentHead{
   .contentHeadMix(@border-col,@border-rad,20px);
   padding:10px;
@@ -53,6 +58,10 @@ html{
   margin:15px 0 0 20px;
   padding:15px;
 
+  div:first-child{
+    text-indent: 1.5em;
+  }
+
   ul{
     list-style: none;
     margin:10px;
@@ -70,7 +79,7 @@ html{
   }
 }
 #placeImage{
-  margin:10px 0;
+  margin:10px auto;
   border-radius:@border-rad;
 }
 #skip{
@@ -97,7 +106,6 @@ html{
   padding:15px;
 }
 #alertWindow{
-  display:none;
   .border(@border-col,@border-rad);
   box-shadow: 0 0 6px rgb(233, 233, 233);
   background-color: white;
@@ -119,7 +127,6 @@ html{
   }
 }
 #alertWindowBack{
-  display:none;
   height: 100%;
   width:100%;
   position:fixed;

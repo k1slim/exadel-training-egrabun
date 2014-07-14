@@ -4,15 +4,15 @@
         <title>
             PDD
         </title>
-        <link rel="stylesheet" type="text/css" href="css/compiled/main.css">
-        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="css/compiled/main.css" />
+        <meta charset="utf-8" />
     </head>
     <body>
         <section class="page">
             <header class="header">
                 Тесты по правилам дорожного движения
             </header>
-            <section class="leftBlock" id="leftBlock">
+            <section class="leftBlock open" id="leftBlock">
                 <div class="contentHead">
                     Доступные тесты
                 </div>
@@ -36,15 +36,15 @@
                     </ul>-->
                 </div>
             </section>
-            <section class="Question" id="Question">
+            <section class="Question close" id="Question">
                 <div class="contentHead" id="titlePlaceholder">
                     *Название теста,Номер вопроса*
                 </div>
                 <div class="textQuest">
-                    <span id="placeQuestionText">
+                    <div id="placeQuestionText">
                         qwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyui
                         qwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyui
-                    </span>
+                    </div>
                     <img src="#" id="placeImage" />
                     <!--<ul>
                         <li id="1answ" class="answ">
@@ -77,22 +77,25 @@
                     <span id="numb">
                         0
                     </span>
-                    \20
-                    <br>
+                    \
+                    <span id="numbLast">
+                        0
+                    </span>
+                    <br />
                     Правильных:
                     <span id="rightAnswerCounter">
                         0
                     </span>
-                    <br>
+                    <br />
                     Неправильных:
                     <span id="wrongAnswerCounter">
                         0
                     </span>
                 </div>
             </section>
-            <section id="alertWindowBack">
+            <section id="alertWindowBack" class="close">
             </section>
-            <section id="alertWindow">
+            <section id="alertWindow" class="close">
                 <span id="textPlaceholder">
                 </span>
                 <div id="closedAlertWindow">
@@ -103,7 +106,8 @@
                 &copy k1slim 2014
             </footer>
         </section>
+        <script src="js/util.js"></script>
+        <script src="js/test.js"></script>
         <script src="js/constructor.js"></script>
-        <script src="js/data.js"></script>
     </body>
 </html>
