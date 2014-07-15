@@ -12,7 +12,7 @@
             <header class="header">
                 Тесты по правилам дорожного движения
             </header>
-            <section class="leftBlock open" id="leftBlock">
+            <section class="open" id="leftBlock">
                 <div class="contentHead">
                     Доступные тесты
                 </div>
@@ -36,14 +36,13 @@
                     </ul>-->
                 </div>
             </section>
-            <section class="Question close" id="Question">
+            <section class="close" id="question">
                 <div class="contentHead" id="titlePlaceholder">
-                    *Название теста,Номер вопроса*
+                    *Название теста*
                 </div>
                 <div class="textQuest">
                     <div id="placeQuestionText">
-                        qwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyui
-                        qwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyui
+                        *Текст вопроса*
                     </div>
                     <img src="#" id="placeImage" />
                     <!--<ul>
@@ -92,11 +91,16 @@
                         0
                     </span>
                 </div>
+                <div class="close" id="back">
+                    Вернуться к списку тестов
+                </div>
             </section>
-            <section id="alertWindowBack" class="close">
+            <section class="close" id="alertWindowBack" >
+
             </section>
-            <section id="alertWindow" class="close">
+            <section class="close" id="alertWindow" >
                 <span id="textPlaceholder">
+                    *Текст*
                 </span>
                 <div id="closedAlertWindow">
                     Closed
@@ -107,6 +111,7 @@
             </footer>
         </section>
         <script src="js/util.js"></script>
+        <script src="js/stat.js"></script>
         <script src="js/test.js"></script>
         <script src="js/constructor.js"></script>
     </body>
