@@ -4,15 +4,12 @@
         this.contenerWithQuestion=document.getElementsByClassName('textQuest')[0];
         this.popUpCloseButton=document.getElementById('closedAlertWindow');
         this.placeImage=document.getElementById('placeImage');
+        this.backButton=document.getElementById('back');
 
-        this.numb=0;
-        this.iter=0;
-        this.rightAnsw=0;
-        this.wrongAnsw=0;
-        this.skipsQuest=[];
-        this.flag=0;
+        this.statModule = new StatModule();
+
+        this.activeQuestion=0;
     };
-
 
     TestModule.prototype.placeQuestions=function(elem){
         util.placeData('placeQuestionText',elem.question);
@@ -38,91 +35,73 @@
         if(e.target.classList.contains('answ') || e.target.id == 'skip')
         {
             this.determinateRightAnswer(e);
-
-            console.log('iter=',this.iter,'nTestGlobal=',quiz.numberOfTest,'skipsQuestArray=',this.skipsQuest,'flag=',this.flag);
-
             this.changeFlag();
-            this.endOfTest();
             this.searchSkippedQuest();
+            console.log('activeQuestion=',this.activeQuestion,'nTestGlobal=',quiz.numberOfTest,'noAnswered=',quiz.data[quiz.numberOfTest].questions[this.activeQuestion].noAnswered,'flag=',quiz.data[quiz.numberOfTest].EndOfTestFlag);
         }
     };
 
     TestModule.prototype.determinateRightAnswer=function(e){
         if(e.target.id != 'skip')
         {
-            if(parseInt(e.target.id)+1==quiz.data[quiz.numberOfTest].questions[this.iter].right)
-                util.placeData('rightAnswerCounter',++this.rightAnsw);
+            if(parseInt(e.target.id)+1==quiz.data[quiz.numberOfTest].questions[this.activeQuestion].right)
+                this.statModule.increaseParameter(2);
             else{
-                util.placeData('wrongAnswerCounter',++this.wrongAnsw);
-                this.showAlertWindow('open',quiz.data[quiz.numberOfTest].questions[this.iter].question,1,quiz.data[quiz.numberOfTest].questions[this.iter].answers[quiz.data[quiz.numberOfTest].questions[this.iter].right-1],quiz.data[quiz.numberOfTest].questions[this.iter].answers[parseInt(e.target.id)]);
+                this.statModule.increaseParameter(3);
+                util.showAlertWindow('open',quiz.data[quiz.numberOfTest].questions[this.activeQuestion].question,1,quiz.data[quiz.numberOfTest].questions[this.activeQuestion].answers[quiz.data[quiz.numberOfTest].questions[this.activeQuestion].right-1],quiz.data[quiz.numberOfTest].questions[this.activeQuestion].answers[parseInt(e.target.id)]);
             }
 
-            util.placeData('numb',++this.numb);
+            this.statModule.increaseParameter(1);
         }
         else
-            this.skipsQuest[this.iter]=1;
+            quiz.data[quiz.numberOfTest].questions[this.activeQuestion].noAnswered=1;
     };
 
     TestModule.prototype.changeFlag=function(){
-        if(this.iter==quiz.data[quiz.numberOfTest].questions.length-1 && this.flag==0 && this.skipsQuest.length!=0)
+        if(this.activeQuestion==quiz.data[quiz.numberOfTest].questions.length-1 && quiz.data[quiz.numberOfTest].EndOfTestFlag!=1 && this.statModule.numberOfAnswQuest < quiz.data[quiz.numberOfTest].questions.length+1)
         {
-            this.flag=1;
-            this.showAlertWindow('open','Пропущенные вопросы',0);
+            quiz.data[quiz.numberOfTest].EndOfTestFlag=1;
+            util.showAlertWindow('open','Пропущенные вопросы',0);
         }
         else{
-            if(this.numb!=quiz.data[quiz.numberOfTest].questions.length+1){
-                this.iter++;
-                this.placeQuestions(quiz.data[quiz.numberOfTest].questions[this.iter]);
+            if(this.statModule.numberOfAnswQuest!=quiz.data[quiz.numberOfTest].questions.length+1 && quiz.data[quiz.numberOfTest].EndOfTestFlag!=1){
+                this.activeQuestion++;
+                this.placeQuestions(quiz.data[quiz.numberOfTest].questions[this.activeQuestion]);
             }
         }
-    };
 
-    TestModule.prototype.endOfTest=function(){
-        if(this.numb==quiz.data[quiz.numberOfTest].questions.length+1)
+        if(this.statModule.numberOfAnswQuest==quiz.data[quiz.numberOfTest].questions.length+1)
         {
-            this.showAlertWindow('open','Молодэц,правильных ответов - '+this.rightAnsw+'.',0);
+            util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
             this.returnToMainPage();
         }
     };
 
     TestModule.prototype.searchSkippedQuest=function(){
-        if(this.flag==1){
-            for(var i=0;i<this.skipsQuest.length;i++){
-                if(this.skipsQuest[i]==1){
-                    this.skipsQuest[i]=0;
-                    this.iter=i;
+        if(quiz.data[quiz.numberOfTest].EndOfTestFlag==1){
+            for(var i=0;i<quiz.data[quiz.numberOfTest].questions.length;i++){
+                if(quiz.data[quiz.numberOfTest].questions[i].noAnswered==1){
+                    quiz.data[quiz.numberOfTest].questions[i].noAnswered=0;
+                    this.activeQuestion=i;
                     break;
                 }
             }
-
-            this.placeQuestions(quiz.data[quiz.numberOfTest].questions[this.iter]);
+            this.placeQuestions(quiz.data[quiz.numberOfTest].questions[this.activeQuestion]);
         }
     };
 
     TestModule.prototype.returnToMainPage=function(){
         util.toggle('leftBlock','open');
-        util.toggle('Question','close');
+        util.toggle('question','close');
+        util.toggle('back','close');
 
-        this.numb=0;
-        this.iter=0;
-        this.rightAnsw=0;
-        this.wrongAnsw=0;
-        this.skipsQuest=[];
-        this.flag=0;
+        this.activeQuestion=0;
+        this.statModule.resetStats();
+        this.statModule.updateStats();
 
-        util.placeData('numb',this.numb);
-        util.placeData('rightAnswerCounter',this.rightAnsw);
-        util.placeData('wrongAnswerCounter',this.wrongAnsw);
-    };
-
-    TestModule.prototype.showAlertWindow=function(view,data,flag,rightAnsw,yourAnsw){
-        util.toggle('alertWindow',view);
-        util.toggle('alertWindowBack',view);
-
-        if(flag!=1)
-            util.placeData('textPlaceholder',data);
-        else
-            util.placeData('textPlaceholder',data+'<br /><br />Вы ответили:<br /> '+yourAnsw+'<br /><br />Правильный ответ:<br /> '+rightAnsw);
+        for(var i=0;i<quiz.data[quiz.numberOfTest].questions.length;i++)
+           delete quiz.data[quiz.numberOfTest].questions[i].noAnswered;
+        delete quiz.data[quiz.numberOfTest].EndOfTestFlag;
     };
 
 
