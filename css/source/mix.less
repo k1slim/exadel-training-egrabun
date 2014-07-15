@@ -10,9 +10,19 @@
   border-bottom: 2px solid @br-col;
   cursor: pointer;
 }
-.contentHeadMix(@br-col,@rad,@size){
+.contentHeadMix(@br-col,@rad,@size,@pad){
+  padding:@pad;
   background-color: @br-col;
   .border(#aaaaaa,@rad);
   font-size: @size;
   font-weight: bold;
+}
+.button(@br-col,@br-rad,@mrg){
+  .contentHeadMix(@br-col,@br-rad,16px,5px);
+  margin: @mrg;
+  text-align: center;
+
+  &:hover{
+    .hoverMix(gray, #6a6a6a);
+  }
 }
