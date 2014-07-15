@@ -1,4 +1,5 @@
 (function(win){
+
     var util={};
 
     util.toggle=function(id,spec){
@@ -31,6 +32,16 @@
             elem.setAttribute('id',i+id);
             container.appendChild(elem);
         }
+    };
+
+    util.showAlertWindow=function(view,data,flag,rightAnsw,yourAnsw){
+        util.toggle('alertWindow',view);
+        util.toggle('alertWindowBack',view);
+
+        if(flag!=1)
+            util.placeData('textPlaceholder',data);
+        else
+            util.placeData('textPlaceholder',data+'<br /><br />Вы ответили:<br /> '+yourAnsw+'<br /><br />Правильный ответ:<br /> '+rightAnsw);
     };
 
     win.util = util;
