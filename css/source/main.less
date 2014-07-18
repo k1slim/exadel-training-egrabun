@@ -46,9 +46,11 @@ html{
       .border(@border-col,@border-rad);
       margin:7px 0;
       padding:10px;
+      //box-shadow:inset 0 -20px 10px -5px rgb(230, 230, 230);
 
       &:hover{
         .hoverMix(@hover-background-col,@hover-border-col);
+       // box-shadow: inset 0 -20px 10px -5px #97E2EE;
       }
     }
   }
@@ -86,12 +88,6 @@ html{
     .button(@border-col,@border-rad,0 10px 0 350px);
   }
 }
-/*#back{
-  .button(@border-col,@border-rad,15px 0 0 20px);
-}
-#skip{
-  .button(@border-col,@border-rad,0 10px 0 350px);
-}*/
 .rightBlock{
   position:relative;
   float:right;
@@ -103,7 +99,7 @@ html{
     .button(@border-col,@border-rad,15px 0 0 20px);
   }
 }
-.info{
+#info{
   .border(@border-col,@border-rad);
   margin:15px 0 0 20px;
   padding:15px;
@@ -136,7 +132,7 @@ html{
   top:0;
   left:0;
   background-color: black;
-  opacity:0.9;
+  opacity:0.75;
 }
 .footer{
   clear:both;
