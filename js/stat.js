@@ -4,6 +4,13 @@
         this.numberOfAnswQuest=0;
         this.rightAnsw=0;
         this.wrongAnsw=0;
+        this.quizzes=[];
+    };
+
+    StatModule.statItems = {
+        NUMBER : 1,
+        RIGHT  : 2,
+        WRONG  : 3
     };
 
     StatModule.prototype.getStats = function(){
@@ -32,8 +39,6 @@
                 ++this.wrongAnsw;
                 break;
         }
-        this.updateStats();
-
     };
 
     StatModule.prototype.updateStats = function(){
@@ -41,7 +46,17 @@
         util.placeData('rightAnswerCounter',this.rightAnsw);
         util.placeData('wrongAnswerCounter',this.wrongAnsw);
         util.placeData('numbLast',quiz.data[quiz.numberOfTest].questions.length);
+        util.placeData('activeQuest',quiz.testModule.activeQuestion+1);
+
+        for(var i=0;i<this.quizzes.length;i++)
+            if(document.getElementById(this.quizzes[i]+'test').innerHTML.indexOf('✔')==-1)
+                document.getElementById(this.quizzes[i]+'test').innerHTML+='  ✔';
     };
+
+    StatModule.prototype.markPassedTest=function(n){
+        this.quizzes.push(n);
+    };
+
 
     window.StatModule = StatModule;
 
