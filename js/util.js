@@ -22,7 +22,7 @@
         place.innerHTML=data;
     };
 
-    util.placeInToContainer=function(place,lenght,clName,id,n){
+    util.placeInToContainer=function(place,lenght,clName,id,n,flag){
         var container=document.createElement('ul');
         place.insertBefore(container, place.children[n]);
 
@@ -44,6 +44,25 @@
             util.placeData('textPlaceholder',data+'<br /><br />Вы ответили:<br /> '+yourAnsw+'<br /><br />Правильный ответ:<br /> '+rightAnsw);
     };
 
-    win.util = util;
+    util.makeGETRequest=function(url, callback){
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url,false);
+        xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+        xhr.onreadystatechange = function()
+        {
+            if(xhr.readyState === 4 && xhr.status === 200)
+            {
+                var type = xhr.getResponseHeader("Content-Type");
+                if(type === "application/json")
+                {
+                    callback(JSON.parse(xhr.responseText));
+                }
+            }
+        };
+        xhr.send();
+};
+
+
+win.util = util;
 
 }(window));
