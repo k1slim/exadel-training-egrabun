@@ -5,6 +5,7 @@
 
         this.testModule=new TestModule();
         this.persModule=null;
+        this.router=null;
 
         this.numberOfTest=-1;
         this.data={};
@@ -17,10 +18,7 @@
         util.toggle('info','open');
 
         util.placeData('titlePlaceholder',this.data[this.numberOfTest].title);
-        if(!this.persModule.checkLocalStorage())
-            this.testModule.statModule.increaseParameter(StatModule.statItems.NUMBER);
         this.testModule.placeQuestions(this.data[this.numberOfTest].questions[this.testModule.activeQuestion]);
-
     };
 
     QuizApp.prototype.determineTestNumber=function(e){
@@ -33,6 +31,7 @@
     QuizApp.prototype.init=function(){
         var self=this;
         this.persModule=new PersModule();
+        this.router=new Router();
 
         this.getData();
         util.placeInToContainer(this.contenerWithTests,this.data.length,"testStr",'test',0,1);
@@ -42,12 +41,13 @@
             util.placeData(i+'test',this.data[i].title);
         }
 
+        window.addEventListener("hashchange", function(){self.router.parseUrl();self.pushDataToApp()});
         this.contenerWithTests.addEventListener("click",function(evt){self.determineTestNumber(evt)});
-        this.testModule.contenerWithQuestion.addEventListener("click",function(evt){self.testModule.determineAnswNumber(evt)});
-        this.testModule.popUpCloseButton.addEventListener("click",function(){self.testModule.defineClosedButtonAction()});
-        this.testModule.backButton.addEventListener("click",function(){self.testModule.returnToMainPage()});
-        this.pushPersDataToApp();
+        this.testModule.contenerWithQuestion.addEventListener("click",function(evt){self.testModule.determineAnswNumber(evt,self.data[self.numberOfTest])});
+        this.testModule.popUpCloseButton.addEventListener("click",function(){self.testModule.defineClosedButtonAction(self.data[self.numberOfTest])});
+        this.testModule.backButton.addEventListener("click",function(){self.testModule.returnToMainPage(self.data[self.numberOfTest])});
 
+        this.pushDataToApp();
     };
 
     QuizApp.prototype.getData=function ()
@@ -59,22 +59,39 @@
         });
     };
 
-    QuizApp.prototype.pushPersDataToApp=function(){
-        if(this.persModule.checkLocalStorage()){
-            this.persModule.getFromLocalStorage();
-
-            this.numberOfTest=this.persModule.actTest;
-            this.testModule.activeQuestion=this.persModule.actQuest;
-            this.testModule.statModule.numberOfAnswQuest=this.persModule.stat.number;
-            this.testModule.statModule.rightAnsw=this.persModule.stat.right;
-            this.testModule.statModule.wrongAnsw=this.persModule.stat.wrong;
-            this.testModule.answArr=this.persModule.answArray;
-
-            this.openTest();
+    QuizApp.prototype.pushDataToApp=function(){
+        if(this.persModule.actTest!=-1){
+            this.getToConst(this.persModule.actTest);
+            this.testModule.statModule.getToStatsModule(this.persModule.stat.right,this.persModule.stat.wrong,this.persModule.stat.number);
+            this.testModule.getToTestModule(this.persModule.actQuest,this.persModule.answArray);
 
             for(var i=0;i<this.testModule.answArr.length;i++)
                 this.data[this.numberOfTest].questions[this.testModule.answArr[i]].Answered=1;
         }
+
+        if(this.router.actQuest!=-1){
+            this.router.urlValidation(this.data);
+            this.getToConst(this.router.actTest);
+            this.testModule.activeQuestion=this.router.actQuest;
+            this.testModule.lockAnswers(this.testModule.activeQuestion,this.testModule.answArr);
+        }
+
+        if(this.persModule.actTest!=-1 && this.router.actQuest!=-1){
+            if(this.router.actTest==this.persModule.actTest)
+                this.testModule.activeQuestion=this.router.actQuest;
+            else{
+                this.testModule.statModule.resetStats();
+                this.testModule.answArr=[];
+                this.persModule.clearLocalStorage();
+            }
+        }
+
+        if(this.persModule.actTest!=-1 || this.router.actQuest!=-1)
+            this.openTest();
+    };
+
+    QuizApp.prototype.getToConst=function(nTest){
+        this.numberOfTest=nTest;
     };
 
 

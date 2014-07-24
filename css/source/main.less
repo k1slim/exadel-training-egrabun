@@ -7,11 +7,15 @@
 .close{
   display:none;
 }
+.lock{
+  opacity:0.33;
+}
 
 html{
   background-color: gray;
 }
 .page {
+  font-family:calibri;
   width:1000px;
   margin:0 auto;
   background-color: whitesmoke;
@@ -33,7 +37,7 @@ html{
   padding:10px;
 }
 .contentHead{
-  .contentHeadMix(@border-col,@border-rad,20px,10px);
+  .contentHeadMix(@border-col,@border-rad,20px,10px 21px);
 }
 .listTest{
 
@@ -50,14 +54,14 @@ html{
 
       &:hover{
         .hoverMix(@hover-background-col,@hover-border-col);
-       // box-shadow: inset 0 -20px 10px -5px #97E2EE;
+        //box-shadow: inset 0 -20px 10px -5px #97E2EE;
       }
     }
   }
 }
 .textQuest{
   .border(@border-col,@border-rad);
-  margin:15px 0 0 20px;
+  margin:15px 0 0 0px;
   padding:15px;
 
   div:first-child{
@@ -77,7 +81,7 @@ html{
     li{
       .border(@border-col,@border-rad);
       margin:7px 0;
-      padding:5px;
+      padding:5px 10px;
 
       &:hover{
         .hoverMix(@hover-background-col,@hover-border-col);
@@ -96,12 +100,12 @@ html{
   padding:10px;
 
   div:last-child{
-    .button(@border-col,@border-rad,15px 0 0 20px);
+    .button(@border-col,@border-rad,15px 0 0 0);
   }
 }
 #info{
   .border(@border-col,@border-rad);
-  margin:15px 0 0 20px;
+  margin:15px 0 0 0px;
   padding:15px;
 }
 #alertWindow{
@@ -135,6 +139,7 @@ html{
   opacity:0.75;
 }
 .footer{
+  text-align: center;
   clear:both;
   display:block;
   background-color: #44d1ff;

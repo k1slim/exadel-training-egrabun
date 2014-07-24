@@ -1,4 +1,4 @@
-(function(win){
+(function(win, $){
 
     var util={};
 
@@ -18,8 +18,9 @@
     };
 
     util.placeData=function(plhold,data){
-        var place=document.getElementById(plhold);
-        place.innerHTML=data;
+        $("#" + plhold).html(data);
+        //var place=document.getElementById(plhold);
+        //place.innerHTML=data;
     };
 
     util.placeInToContainer=function(place,lenght,clName,id,n,flag){
@@ -60,9 +61,21 @@
             }
         };
         xhr.send();
-};
+    };
+
+
+    util.getRandomInt=function(){
+        var arr=[0,1,2,3,4];
+        for(var i=arr.length;i-->0; ) {
+            var t=arr[i],
+            j=Math.floor(i*Math.random());
+            arr[i]=arr[j];
+            arr[j]=t;
+        }
+        return arr;
+    };
 
 
 win.util = util;
 
-}(window));
+}(window, jQuery));

@@ -2,18 +2,18 @@
 
     var PersModule=function(){
         this.stat={};
-        this.actQuest=0;
-        this.actTest=0;
+        this.actQuest=-1;
+        this.actTest=-1;
         this.answArray=[];
+
+        this.parseLocalStorage();
     };
 
-    PersModule.prototype.get=function(statObj,actQuest,actTest,answArray){
+    PersModule.prototype.getToPersModule=function(statObj,actQuest,actTest,answArray){
         this.stat=statObj;
         this.actQuest=actQuest;
         this.actTest=actTest;
         this.answArray=answArray;
-
-        this.pushToLocalStorage();
     };
 
     PersModule.prototype.pushToLocalStorage=function(){
@@ -24,17 +24,18 @@
         return localStorage['quizzer'];
     };
 
-    PersModule.prototype.clearStorage=function(){
+    PersModule.prototype.clearLocalStorage=function(){
         localStorage.removeItem('quizzer');
+        this.getToPersModule({},-1,-1,[]);
     };
 
-    PersModule.prototype.getFromLocalStorage=function(){
-        var temp=JSON.parse(localStorage.getItem('quizzer'));
-
-        this.stat=temp.stat;
-        this.actQuest=temp.actQuest;
-        this.actTest=temp.actTest;
-        this.answArray=temp.answArray;
+    PersModule.prototype.parseLocalStorage=function(){
+        if(this.checkLocalStorage()){
+            var temp=JSON.parse(localStorage.getItem('quizzer'));
+            this.getToPersModule(temp.stat,temp.actQuest,temp.actTest,temp.answArray);
+        }
+        else
+            this.getToPersModule({},-1,-1,[]);
     };
 
 

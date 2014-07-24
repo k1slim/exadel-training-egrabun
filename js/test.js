@@ -13,10 +13,11 @@
     };
 
     TestModule.prototype.placeQuestions=function(elem){
+        this.changeId();
         util.placeData('placeQuestionText',elem.question);
 
         for(var j=0;j<5;j++)
-            util.toggle(j+'answ','close');
+           util.toggle(j+'answ','close');
 
         if(elem.questionImg)
         {
@@ -30,81 +31,87 @@
             util.toggle(i+'answ','open');
             util.placeData(i+'answ',elem.answers[i]);
         }
-        quiz.persModule.get(this.statModule.getStats(),this.activeQuestion,quiz.numberOfTest,this.answArr,this.statModule.quizzes);
+
+        quiz.persModule.getToPersModule(this.statModule.getStats(),this.activeQuestion,quiz.numberOfTest,this.answArr);
+        quiz.persModule.pushToLocalStorage();
+
+        quiz.router.getToRouter(this.activeQuestion,quiz.numberOfTest);
+        quiz.router.pushToURL();
+
         this.statModule.updateStats();
     };
 
-    TestModule.prototype.determineAnswNumber=function(e){
+    TestModule.prototype.determineAnswNumber=function(e,elem){
         if(e.target.classList.contains('answ') || e.target.id == 'skip')
         {
-            this.determinateRightAnswer(e);
-            console.log('activeQuestion=',this.activeQuestion,'nTestGlobal=',quiz.numberOfTest,'Answered=',quiz.data[quiz.numberOfTest].questions[this.activeQuestion].Answered);
+            this.determinateRightAnswer(e,elem);
+            console.log('activeQuestion=',this.activeQuestion,'nTestGlobal=',quiz.numberOfTest,'Answered=',elem.questions[this.activeQuestion].Answered);
+            this.unlockAnswers();
         }
     };
 
-    TestModule.prototype.determinateRightAnswer=function(e){
+    TestModule.prototype.determinateRightAnswer=function(e,elem){
+        console.log(e);
         if(e.target.id != 'skip')
         {
             this.statModule.increaseParameter(StatModule.statItems.NUMBER);
-            quiz.data[quiz.numberOfTest].questions[this.activeQuestion].Answered=1;
+            elem.questions[this.activeQuestion].Answered=1;
             this.answArr.push(this.activeQuestion);
 
-            if(parseInt(e.target.id)+1==quiz.data[quiz.numberOfTest].questions[this.activeQuestion].right){
+            if(parseInt(e.target.id)+1==elem.questions[this.activeQuestion].right){
                 this.statModule.increaseParameter(StatModule.statItems.RIGHT);
-                this.logicOfQuestions();
+                this.logicOfQuestions(elem);
             }
             else{
                 this.statModule.increaseParameter(StatModule.statItems.WRONG);
-                util.showAlertWindow('open',quiz.data[quiz.numberOfTest].questions[this.activeQuestion].question,1,quiz.data[quiz.numberOfTest].questions[this.activeQuestion].answers[quiz.data[quiz.numberOfTest].questions[this.activeQuestion].right-1],quiz.data[quiz.numberOfTest].questions[this.activeQuestion].answers[parseInt(e.target.id)]);
+                util.showAlertWindow('open',elem.questions[this.activeQuestion].question,1,elem.questions[this.activeQuestion].answers[elem.questions[this.activeQuestion].right-1],elem.questions[this.activeQuestion].answers[parseInt(e.target.id)]);
             }
         }
         else{
-            this.logicOfQuestions();
+            this.logicOfQuestions(elem);
         }
     };
 
-    TestModule.prototype.logicOfQuestions=function(){
+    TestModule.prototype.logicOfQuestions=function(elem){
         var found = false;
 
-        if(this.statModule.numberOfAnswQuest != quiz.data[quiz.numberOfTest].questions.length+1){
+        if(this.statModule.numberOfAnswQuest != elem.questions.length+1){
 
-            if(this.activeQuestion==quiz.data[quiz.numberOfTest].questions.length-1){
-                for(var j=0;j<quiz.data[quiz.numberOfTest].questions.length;j++){
-                    if(!quiz.data[quiz.numberOfTest].questions[j].Answered){
+            if(this.activeQuestion==elem.questions.length-1){
+                for(var j=0;j<elem.questions.length;j++){
+                    if(!elem.questions[j].Answered){
                         this.activeQuestion=j;
-                        this.placeQuestions(quiz.data[quiz.numberOfTest].questions[this.activeQuestion]);
+                        this.placeQuestions(elem.questions[this.activeQuestion]);
                         break;
                     }
                 }
 
             }
             else{
-                this.activeQuestion++;
-
-                for(var i=this.activeQuestion;i<quiz.data[quiz.numberOfTest].questions.length;i++){
-                    if(!quiz.data[quiz.numberOfTest].questions[i].Answered){
+                for(var i=++this.activeQuestion;i<elem.questions.length;i++){
+                    if(!elem.questions[i].Answered){
                         found = true;
                         break;
                     }
                 }
 
                 if(found === false){
-                    this.logicOfQuestions();
+                    this.logicOfQuestions(elem);
                 }
                 else{
                     this.activeQuestion=i;
-                    this.placeQuestions(quiz.data[quiz.numberOfTest].questions[this.activeQuestion]);
+                    this.placeQuestions(elem.questions[this.activeQuestion]);
                 }
             }
         }
-         if(this.statModule.numberOfAnswQuest == quiz.data[quiz.numberOfTest].questions.length+1){
-         util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
-         this.returnToMainPage();
+         if(this.statModule.numberOfAnswQuest == elem.questions.length+1){
+             util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
+             this.returnToMainPage(elem);
          }
     };
 
-    TestModule.prototype.returnToMainPage=function(){
-        if(this.statModule.numberOfAnswQuest == quiz.data[quiz.numberOfTest].questions.length+1)
+    TestModule.prototype.returnToMainPage=function(elem){
+        if(this.statModule.numberOfAnswQuest == elem.questions.length+1)
             this.statModule.markPassedTest(quiz.numberOfTest);
 
         util.toggle('leftBlock','open');
@@ -117,21 +124,54 @@
         this.statModule.updateStats();
 
         this.answArr=[];
-        for(var i=0;i<quiz.data[quiz.numberOfTest].questions.length;i++)
-           delete quiz.data[quiz.numberOfTest].questions[i].Answered;
-        quiz.persModule.clearStorage();
+        for(var i=0;i<elem.questions.length;i++)
+           delete elem.questions[i].Answered;
+
+        quiz.persModule.clearLocalStorage();
+        quiz.router.clearUrl();
     };
 
-    TestModule.prototype.defineClosedButtonAction=function(){
-        if(this.statModule.numberOfAnswQuest == quiz.data[quiz.numberOfTest].questions.length+1){
+    TestModule.prototype.defineClosedButtonAction=function(elem){
+        if(this.statModule.numberOfAnswQuest == elem.questions.length+1){
             util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
-            this.returnToMainPage();
+            this.returnToMainPage(elem);
         }
         else{
-            if(this.statModule.numberOfAnswQuest != 0)
-                this.logicOfQuestions();
+            if(this.statModule.numberOfAnswQuest != 1)
+                this.logicOfQuestions(elem);
             util.showAlertWindow('close');
         }
+    };
+
+    TestModule.prototype.changeId=function(){
+        var temp=util.getRandomInt();
+        for(var i=0;i<5;i++){
+            this.contenerWithQuestion.getElementsByTagName('li')[i].setAttribute('id',temp[i]+'answ');
+        }
+    };
+
+    TestModule.prototype.getToTestModule=function(aQuest,aArr){
+        this.activeQuestion=aQuest;
+        this.answArr=aArr;
+    };
+
+    TestModule.prototype.lockAnswers=function(aQuest,aArr){
+        for(var i=0;i<aArr.length;i++){
+            if(aQuest==aArr[i])
+                for(var j=0;j<5;j++){
+                    document.getElementById(j+'answ').classList.remove('answ');
+                    document.getElementById(j+'answ').classList.add('lock');
+                }
+        }
+    };
+
+    TestModule.prototype.unlockAnswers=function(){
+        for(var j=0;j<5;j++)
+        if(!document.getElementById(j+'answ').classList.contains('answ')){
+            document.getElementById(j+'answ').classList.add('answ');
+            document.getElementById(j+'answ').classList.remove('lock');
+        }
+
     };
 
 
