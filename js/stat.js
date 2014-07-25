@@ -48,12 +48,12 @@
         }
     };
 
-    StatModule.prototype.updateStats = function(){
+    StatModule.prototype.updateStats = function(elem,actQuest){
         util.placeData('numb',this.numberOfAnswQuest);
         util.placeData('rightAnswerCounter',this.rightAnsw);
         util.placeData('wrongAnswerCounter',this.wrongAnsw);
-        util.placeData('numbLast',quiz.data[quiz.numberOfTest].questions.length);
-        util.placeData('activeQuest',parseInt(quiz.testModule.activeQuestion)+1);
+        util.placeData('numbLast',elem.questions.length);
+        util.placeData('activeQuest',parseInt(actQuest)+1);
 
         for(var i=0;i<this.quizzes.length;i++)
             if(document.getElementById(this.quizzes[i]+'test').innerHTML.indexOf('✔')==-1)

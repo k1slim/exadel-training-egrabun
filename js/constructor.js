@@ -18,7 +18,7 @@
         util.toggle('info','open');
 
         util.placeData('titlePlaceholder',this.data[this.numberOfTest].title);
-        this.testModule.placeQuestions(this.data[this.numberOfTest].questions[this.testModule.activeQuestion]);
+        this.testModule.placeQuestions(this.data[this.numberOfTest],this.numberOfTest);
     };
 
     QuizApp.prototype.determineTestNumber=function(e){
@@ -43,15 +43,14 @@
 
         window.addEventListener("hashchange", function(){self.router.parseUrl();self.pushDataToApp()});
         this.contenerWithTests.addEventListener("click",function(evt){self.determineTestNumber(evt)});
-        this.testModule.contenerWithQuestion.addEventListener("click",function(evt){self.testModule.determineAnswNumber(evt,self.data[self.numberOfTest])});
-        this.testModule.popUpCloseButton.addEventListener("click",function(){self.testModule.defineClosedButtonAction(self.data[self.numberOfTest])});
-        this.testModule.backButton.addEventListener("click",function(){self.testModule.returnToMainPage(self.data[self.numberOfTest])});
+        this.testModule.contenerWithQuestion.addEventListener("click",function(evt){self.testModule.determineAnswNumber(evt,self.data[self.numberOfTest],self.numberOfTest)});
+        this.testModule.popUpCloseButton.addEventListener("click",function(){self.testModule.defineClosedButtonAction(self.data[self.numberOfTest],self.numberOfTest)});
+        this.testModule.backButton.addEventListener("click",function(){self.testModule.returnToMainPage(self.data[self.numberOfTest],self.numberOfTest)});
 
         this.pushDataToApp();
     };
 
-    QuizApp.prototype.getData=function ()
-    {
+    QuizApp.prototype.getData=function (){
         var self = this;
 
         util.makeGETRequest("js/json/data.json", function(responseData){
@@ -73,6 +72,7 @@
             this.router.urlValidation(this.data);
             this.getToConst(this.router.actTest);
             this.testModule.activeQuestion=this.router.actQuest;
+            this.testModule.unlockAnswers();
             this.testModule.lockAnswers(this.testModule.activeQuestion,this.testModule.answArr);
         }
 

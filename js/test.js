@@ -12,46 +12,44 @@
         this.answArr=[];
     };
 
-    TestModule.prototype.placeQuestions=function(elem){
+    TestModule.prototype.placeQuestions=function(elem,nTest){
         this.changeId();
-        util.placeData('placeQuestionText',elem.question);
+        util.placeData('placeQuestionText',elem.questions[this.activeQuestion].question);
 
         for(var j=0;j<5;j++)
            util.toggle(j+'answ','close');
 
-        if(elem.questionImg)
+        if(elem.questions[this.activeQuestion].questionImg)
         {
             util.toggle('placeImage','open');
-            this.placeImage.src=elem.questionImg;
+            this.placeImage.src=elem.questions[this.activeQuestion].questionImg;
         }
         else
             util.toggle('placeImage','close');
 
-        for(var i=0;i<elem.answers.length;i++){
+        for(var i=0;i<elem.questions[this.activeQuestion].answers.length;i++){
             util.toggle(i+'answ','open');
-            util.placeData(i+'answ',elem.answers[i]);
+            util.placeData(i+'answ',elem.questions[this.activeQuestion].answers[i]);
         }
 
-        quiz.persModule.getToPersModule(this.statModule.getStats(),this.activeQuestion,quiz.numberOfTest,this.answArr);
+        quiz.persModule.getToPersModule(this.statModule.getStats(),this.activeQuestion,nTest,this.answArr);
         quiz.persModule.pushToLocalStorage();
 
-        quiz.router.getToRouter(this.activeQuestion,quiz.numberOfTest);
+        quiz.router.getToRouter(this.activeQuestion,nTest);
         quiz.router.pushToURL();
 
-        this.statModule.updateStats();
+        this.statModule.updateStats(elem,this.activeQuestion);
     };
 
-    TestModule.prototype.determineAnswNumber=function(e,elem){
+    TestModule.prototype.determineAnswNumber=function(e,elem,nTest){
         if(e.target.classList.contains('answ') || e.target.id == 'skip')
         {
-            this.determinateRightAnswer(e,elem);
-            console.log('activeQuestion=',this.activeQuestion,'nTestGlobal=',quiz.numberOfTest,'Answered=',elem.questions[this.activeQuestion].Answered);
+            this.determinateRightAnswer(e,elem,nTest);
             this.unlockAnswers();
         }
     };
 
-    TestModule.prototype.determinateRightAnswer=function(e,elem){
-        console.log(e);
+    TestModule.prototype.determinateRightAnswer=function(e,elem,nTest){
         if(e.target.id != 'skip')
         {
             this.statModule.increaseParameter(StatModule.statItems.NUMBER);
@@ -60,7 +58,7 @@
 
             if(parseInt(e.target.id)+1==elem.questions[this.activeQuestion].right){
                 this.statModule.increaseParameter(StatModule.statItems.RIGHT);
-                this.logicOfQuestions(elem);
+                this.logicOfQuestions(elem,nTest);
             }
             else{
                 this.statModule.increaseParameter(StatModule.statItems.WRONG);
@@ -68,11 +66,11 @@
             }
         }
         else{
-            this.logicOfQuestions(elem);
+            this.logicOfQuestions(elem,nTest);
         }
     };
 
-    TestModule.prototype.logicOfQuestions=function(elem){
+    TestModule.prototype.logicOfQuestions=function(elem,nTest){
         var found = false;
 
         if(this.statModule.numberOfAnswQuest != elem.questions.length+1){
@@ -81,7 +79,7 @@
                 for(var j=0;j<elem.questions.length;j++){
                     if(!elem.questions[j].Answered){
                         this.activeQuestion=j;
-                        this.placeQuestions(elem.questions[this.activeQuestion]);
+                        this.placeQuestions(elem,nTest);
                         break;
                     }
                 }
@@ -96,23 +94,23 @@
                 }
 
                 if(found === false){
-                    this.logicOfQuestions(elem);
+                    this.logicOfQuestions(elem,nTest);
                 }
                 else{
                     this.activeQuestion=i;
-                    this.placeQuestions(elem.questions[this.activeQuestion]);
+                    this.placeQuestions(elem,nTest);
                 }
             }
         }
          if(this.statModule.numberOfAnswQuest == elem.questions.length+1){
              util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
-             this.returnToMainPage(elem);
+             this.returnToMainPage(elem,nTest);
          }
     };
 
-    TestModule.prototype.returnToMainPage=function(elem){
+    TestModule.prototype.returnToMainPage=function(elem,nTest){
         if(this.statModule.numberOfAnswQuest == elem.questions.length+1)
-            this.statModule.markPassedTest(quiz.numberOfTest);
+            this.statModule.markPassedTest(nTest);
 
         util.toggle('leftBlock','open');
         util.toggle('question','close');
@@ -121,7 +119,7 @@
 
         this.activeQuestion=0;
         this.statModule.resetStats();
-        this.statModule.updateStats();
+        this.statModule.updateStats(elem,this.activeQuestion);
 
         this.answArr=[];
         for(var i=0;i<elem.questions.length;i++)
@@ -131,14 +129,14 @@
         quiz.router.clearUrl();
     };
 
-    TestModule.prototype.defineClosedButtonAction=function(elem){
+    TestModule.prototype.defineClosedButtonAction=function(elem,nTest){
         if(this.statModule.numberOfAnswQuest == elem.questions.length+1){
             util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
-            this.returnToMainPage(elem);
+            this.returnToMainPage(elem,nTest);
         }
         else{
             if(this.statModule.numberOfAnswQuest != 1)
-                this.logicOfQuestions(elem);
+                this.logicOfQuestions(elem,nTest);
             util.showAlertWindow('close');
         }
     };
