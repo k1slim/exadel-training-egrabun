@@ -1,2 +1,1 @@
-exadel-training-egrabun
-=======================
+http://k1slim.github.io/k1slim.github.com/
