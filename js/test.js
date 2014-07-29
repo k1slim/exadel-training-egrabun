@@ -1,10 +1,9 @@
-(function(win){
+(function(win,$){
 
     var TestModule=function(){
-        this.contenerWithQuestion=document.getElementsByClassName('textQuest')[0];
-        this.popUpCloseButton=document.getElementById('closedAlertWindow');
-        this.placeImage=document.getElementById('placeImage');
-        this.backButton=document.getElementById('back');
+        this.contenerWithQuestion=$('.textQuest');
+        this.popUpCloseButton=$('#closedAlertWindow');
+        this.backButton=$('#back');
 
         this.statModule = new StatModule();
 
@@ -13,24 +12,11 @@
     };
 
     TestModule.prototype.placeQuestions=function(elem,nTest){
-        this.changeId();
-        util.placeData('placeQuestionText',elem.questions[this.activeQuestion].question);
+        var template = Handlebars.compile($('#template').html());
+        this.contenerWithQuestion.html(template(elem.questions[this.activeQuestion]));
 
-        for(var j=0;j<5;j++)
-           util.toggle(j+'answ','close');
-
-        if(elem.questions[this.activeQuestion].questionImg)
-        {
-            util.toggle('placeImage','open');
-            this.placeImage.src=elem.questions[this.activeQuestion].questionImg;
-        }
-        else
-            util.toggle('placeImage','close');
-
-        for(var i=0;i<elem.questions[this.activeQuestion].answers.length;i++){
-            util.toggle(i+'answ','open');
-            util.placeData(i+'answ',elem.questions[this.activeQuestion].answers[i]);
-        }
+        this.changeId(elem);
+        this.lockAnswers(this.activeQuestion,this.answArr);
 
         quiz.persModule.getToPersModule(this.statModule.getStats(),this.activeQuestion,nTest,this.answArr);
         quiz.persModule.pushToLocalStorage();
@@ -42,16 +28,13 @@
     };
 
     TestModule.prototype.determineAnswNumber=function(e,elem,nTest){
-        if(e.target.classList.contains('answ') || e.target.id == 'skip')
-        {
+        if(e.target.classList.contains('answ') || e.target.id == 'skip'){
             this.determinateRightAnswer(e,elem,nTest);
-            this.unlockAnswers();
         }
     };
 
     TestModule.prototype.determinateRightAnswer=function(e,elem,nTest){
-        if(e.target.id != 'skip')
-        {
+        if(e.target.id != 'skip'){
             this.statModule.increaseParameter(StatModule.statItems.NUMBER);
             elem.questions[this.activeQuestion].Answered=1;
             this.answArr.push(this.activeQuestion);
@@ -65,53 +48,42 @@
                 util.showAlertWindow('open',elem.questions[this.activeQuestion].question,1,elem.questions[this.activeQuestion].answers[elem.questions[this.activeQuestion].right-1],elem.questions[this.activeQuestion].answers[parseInt(e.target.id)]);
             }
         }
-        else{
+        else
             this.logicOfQuestions(elem,nTest);
-        }
     };
 
     TestModule.prototype.logicOfQuestions=function(elem,nTest){
-        var found = false;
+        var found = false,i;
 
         if(this.statModule.numberOfAnswQuest != elem.questions.length+1){
+            i=(this.activeQuestion==elem.questions.length-1)?0:++this.activeQuestion;
 
-            if(this.activeQuestion==elem.questions.length-1){
-                for(var j=0;j<elem.questions.length;j++){
-                    if(!elem.questions[j].Answered){
-                        this.activeQuestion=j;
-                        this.placeQuestions(elem,nTest);
-                        break;
-                    }
-                }
-
-            }
-            else{
-                for(var i=++this.activeQuestion;i<elem.questions.length;i++){
-                    if(!elem.questions[i].Answered){
-                        found = true;
-                        break;
-                    }
-                }
-
-                if(found === false){
-                    this.logicOfQuestions(elem,nTest);
-                }
-                else{
+            for(i;i<elem.questions.length;i++)
+                if(!elem.questions[i].Answered){
+                    found = true;
                     this.activeQuestion=i;
                     this.placeQuestions(elem,nTest);
+                    break;
                 }
-            }
+
+            if(found === false)
+                this.logicOfQuestions(elem,nTest);
         }
-         if(this.statModule.numberOfAnswQuest == elem.questions.length+1){
-             util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
-             this.returnToMainPage(elem,nTest);
-         }
+        else{
+            util.showAlertWindow('open','Молодэц,правильных ответов - '+this.statModule.rightAnsw+'.',0);
+            this.returnToMainPage(elem,nTest);
+        }
     };
 
     TestModule.prototype.returnToMainPage=function(elem,nTest){
         if(this.statModule.numberOfAnswQuest == elem.questions.length+1)
             this.statModule.markPassedTest(nTest);
 
+
+        //$('#leftBlock').toggle();
+        //$('#question').toggle();
+        //$('#back').toggle();
+        //$('#info').toggle();
         util.toggle('leftBlock','open');
         util.toggle('question','close');
         util.toggle('back','close');
@@ -141,10 +113,13 @@
         }
     };
 
-    TestModule.prototype.changeId=function(){
-        var temp=util.getRandomInt();
-        for(var i=0;i<5;i++){
-            this.contenerWithQuestion.getElementsByTagName('li')[i].setAttribute('id',temp[i]+'answ');
+    TestModule.prototype.changeId=function(elem){
+        var arr=[0,1,2,3,4];
+        arr.length=elem.questions[this.activeQuestion].answers.length;
+        var temp=_.shuffle(arr);
+        for(var i=0;i<elem.questions[this.activeQuestion].answers.length;i++){
+                this.contenerWithQuestion.find('li')[i].setAttribute('id',temp[i]+'answ');
+                $('#'+temp[i]+'answ').html(elem.questions[this.activeQuestion].answers[temp[i]]);
         }
     };
 
@@ -157,22 +132,14 @@
         for(var i=0;i<aArr.length;i++){
             if(aQuest==aArr[i])
                 for(var j=0;j<5;j++){
-                    document.getElementById(j+'answ').classList.remove('answ');
-                    document.getElementById(j+'answ').classList.add('lock');
+                    var elem=$('#'+j+'answ');
+                    elem.removeClass('answ');
+                    elem.addClass('lock');
                 }
         }
-    };
-
-    TestModule.prototype.unlockAnswers=function(){
-        for(var j=0;j<5;j++)
-        if(!document.getElementById(j+'answ').classList.contains('answ')){
-            document.getElementById(j+'answ').classList.add('answ');
-            document.getElementById(j+'answ').classList.remove('lock');
-        }
-
     };
 
 
     window.TestModule = TestModule;
 
-}(window));
+}(window,jQuery));

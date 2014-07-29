@@ -1,7 +1,7 @@
-(function(win){
+(function(win,$){
 
     var QuizApp=function(){
-        this.contenerWithTests=document.getElementsByClassName('listTest')[0];
+        this.contenerWithTests=$('.listTest');
 
         this.testModule=new TestModule();
         this.persModule=null;
@@ -12,12 +12,16 @@
     };
 
     QuizApp.prototype.openTest=function(){
+        //$('#leftBlock').toggle();
+        //$('#question').toggle();
+        //$('#back').toggle();
+        //$('#info').toggle();
         util.toggle('leftBlock','close');
         util.toggle('question','open');
         util.toggle('back','open');
         util.toggle('info','open');
 
-        util.placeData('titlePlaceholder',this.data[this.numberOfTest].title);
+        $('#titlePlaceholder').html(this.data[this.numberOfTest].title);
         this.testModule.placeQuestions(this.data[this.numberOfTest],this.numberOfTest);
     };
 
@@ -33,29 +37,34 @@
         this.persModule=new PersModule();
         this.router=new Router();
 
-        this.getData();
-        util.placeInToContainer(this.contenerWithTests,this.data.length,"testStr",'test',0,1);
-        util.placeInToContainer(this.testModule.contenerWithQuestion,5,"answ open",'answ',2,0);
-
-        for(var i=0;i<this.data.length;i++){
-            util.placeData(i+'test',this.data[i].title);
-        }
-
-        window.addEventListener("hashchange", function(){self.router.parseUrl();self.pushDataToApp()});
-        this.contenerWithTests.addEventListener("click",function(evt){self.determineTestNumber(evt)});
-        this.testModule.contenerWithQuestion.addEventListener("click",function(evt){self.testModule.determineAnswNumber(evt,self.data[self.numberOfTest],self.numberOfTest)});
-        this.testModule.popUpCloseButton.addEventListener("click",function(){self.testModule.defineClosedButtonAction(self.data[self.numberOfTest],self.numberOfTest)});
-        this.testModule.backButton.addEventListener("click",function(){self.testModule.returnToMainPage(self.data[self.numberOfTest],self.numberOfTest)});
-
-        this.pushDataToApp();
-    };
-
-    QuizApp.prototype.getData=function (){
-        var self = this;
-
-        util.makeGETRequest("js/json/data.json", function(responseData){
+        this.getData("js/json/data.json", function(responseData){
             self.data = responseData;
         });
+    };
+
+    QuizApp.prototype.startApp=function(){
+        var self=this;
+
+        var template = Handlebars.compile( $('#templateListTest').html() );
+        this.contenerWithTests.html( template({test:this.data}) );
+
+        window.addEventListener("hashchange", function(){self.router.parseUrl();self.pushDataToApp()});
+        this.contenerWithTests.on("click",function(evt){self.determineTestNumber(evt)});
+        this.testModule.contenerWithQuestion.on("click",function(evt){self.testModule.determineAnswNumber(evt,self.data[self.numberOfTest],self.numberOfTest)});
+        this.testModule.popUpCloseButton.on("click",function(){self.testModule.defineClosedButtonAction(self.data[self.numberOfTest],self.numberOfTest)});
+        this.testModule.backButton.on("click",function(){self.testModule.returnToMainPage(self.data[self.numberOfTest],self.numberOfTest)});
+
+        this.pushDataToApp();
+
+    };
+
+    QuizApp.prototype.getData=function (url,callback){
+        var self=this;
+        $.getJSON(url,
+            function (data) {
+                callback(data);
+                self.startApp();
+            });
     };
 
     QuizApp.prototype.pushDataToApp=function(){
@@ -72,8 +81,6 @@
             this.router.urlValidation(this.data);
             this.getToConst(this.router.actTest);
             this.testModule.activeQuestion=this.router.actQuest;
-            this.testModule.unlockAnswers();
-            this.testModule.lockAnswers(this.testModule.activeQuestion,this.testModule.answArr);
         }
 
         if(this.persModule.actTest!=-1 && this.router.actQuest!=-1){
@@ -97,7 +104,7 @@
 
     window.QuizzApp = QuizApp;
 
-}(window));
+}(window, jQuery));
 
 window.onload=function(){
     quiz=new QuizzApp();
