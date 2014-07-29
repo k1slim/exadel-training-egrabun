@@ -43,7 +43,6 @@
             this.actTest=0;
         if(this.checkUrl()[2]>data[this.actTest].questions.length || this.checkUrl()[2]==0)
             this.actQuest=0;
-
     };
 
 

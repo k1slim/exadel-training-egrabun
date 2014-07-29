@@ -3,76 +3,28 @@
     var util={};
 
     util.toggle=function(id,spec){
-        var elem=document.getElementById(id);
-
-        if(!elem.classList.contains(spec)){
+        var $elem=$('#'+id);
+        if(!$elem.hasClass(spec)){
             if(spec=='open'){
-                elem.classList.add('open');
-                elem.classList.remove('close');
+                $elem.addClass('open');
+                $elem.removeClass('close');
             }
             else{
-                elem.classList.add('close');
-                elem.classList.remove('open');
+                $elem.addClass('close');
+                $elem.removeClass('open');
             }
-        }
-    };
-
-    util.placeData=function(plhold,data){
-        $("#" + plhold).html(data);
-        //var place=document.getElementById(plhold);
-        //place.innerHTML=data;
-    };
-
-    util.placeInToContainer=function(place,lenght,clName,id,n,flag){
-        var container=document.createElement('ul');
-        place.insertBefore(container, place.children[n]);
-
-        for(var i=0;i<lenght;i++){
-            var elem=document.createElement('li');
-            elem.className=clName;
-            elem.setAttribute('id',i+id);
-            container.appendChild(elem);
         }
     };
 
     util.showAlertWindow=function(view,data,flag,rightAnsw,yourAnsw){
         util.toggle('alertWindow',view);
         util.toggle('alertWindowBack',view);
-
+        //$('#alertWindow').toggle();
+        //$('#alertWindowBack').toggle();
         if(flag!=1)
-            util.placeData('textPlaceholder',data);
+            $('#textPlaceholder').html(data);
         else
-            util.placeData('textPlaceholder',data+'<br /><br />Вы ответили:<br /> '+yourAnsw+'<br /><br />Правильный ответ:<br /> '+rightAnsw);
-    };
-
-    util.makeGETRequest=function(url, callback){
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url,false);
-        xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-        xhr.onreadystatechange = function()
-        {
-            if(xhr.readyState === 4 && xhr.status === 200)
-            {
-                var type = xhr.getResponseHeader("Content-Type");
-                if(type === "application/json")
-                {
-                    callback(JSON.parse(xhr.responseText));
-                }
-            }
-        };
-        xhr.send();
-    };
-
-
-    util.getRandomInt=function(){
-        var arr=[0,1,2,3,4];
-        for(var i=arr.length;i-->0; ) {
-            var t=arr[i],
-            j=Math.floor(i*Math.random());
-            arr[i]=arr[j];
-            arr[j]=t;
-        }
-        return arr;
+            $('#textPlaceholder').html(data+'<br /><br />Вы ответили:<br /> '+yourAnsw+'<br /><br />Правильный ответ:<br /> '+rightAnsw);
     };
 
 

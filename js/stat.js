@@ -1,4 +1,4 @@
-(function(win){
+(function(win,$){
 
     var StatModule=function(){
         this.numberOfAnswQuest=1;
@@ -49,15 +49,16 @@
     };
 
     StatModule.prototype.updateStats = function(elem,actQuest){
-        util.placeData('numb',this.numberOfAnswQuest);
-        util.placeData('rightAnswerCounter',this.rightAnsw);
-        util.placeData('wrongAnswerCounter',this.wrongAnsw);
-        util.placeData('numbLast',elem.questions.length);
-        util.placeData('activeQuest',parseInt(actQuest)+1);
+        $('#numb').html(this.numberOfAnswQuest);
+        $('#rightAnswerCounter').html(this.rightAnsw);
+        $('#wrongAnswerCounter').html(this.wrongAnsw);
+        $('#numbLast').html(elem.questions.length);
+        $('#activeQuest').html(parseInt(actQuest)+1);
 
-        for(var i=0;i<this.quizzes.length;i++)
-            if(document.getElementById(this.quizzes[i]+'test').innerHTML.indexOf('✔')==-1)
-                document.getElementById(this.quizzes[i]+'test').innerHTML+='  ✔';
+        _.forEach(this.quizzes,function(num){
+            var elm=($('#'+num+'test'));
+            (elm.html().indexOf('✔')==-1)? elm.append('  ✔'):false;
+        });
     };
 
     StatModule.prototype.markPassedTest=function(n){
@@ -67,4 +68,4 @@
 
     window.StatModule = StatModule;
 
-}(window));
+}(window,jQuery));
