@@ -7,7 +7,9 @@
         <link rel="stylesheet" type="text/css" href="css/compiled/main.css" />
         <link rel="shortcut icon" href="http://avto-russia.ru/images/favicon.ico" />
         <meta charset="utf-8" />
-        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/libraries/jquery-2.1.1.min.js"></script>
+        <script src="js/libraries/lodash.js"></script>
+        <script src="js/libraries/handlebars-v1.3.0.js"></script>
     </head>
     <body>
         <section class="page">
@@ -19,23 +21,7 @@
                     Доступные тесты
                 </div>
                 <div class="listTest">
-                    <!--<ul>
-                        <li id="1test" class="testStr">
-                            1
-                        </li>
-                        <li id="2test" class="testStr">
-                            2
-                        </li>
-                        <li id="3test" class="testStr">
-                            3
-                        </li>
-                        <li id="4test" class="testStr">
-                            4
-                        </li>
-                        <li id="5test" class="testStr">
-                            5
-                        </li>
-                    </ul>-->
+
                 </div>
             </section>
             <section class="close" id="question">
@@ -43,30 +29,7 @@
                     *Название теста*
                 </div>
                 <div class="textQuest">
-                    <div id="placeQuestionText">
-                         *Текст вопроса*
-                    </div>
-                    <img src="#" id="placeImage" />
-                    <!--<ul>
-                        <li id="1answ" class="answ">
-                            1
-                        </li>
-                        <li id="2answ" class="answ">
-                            2
-                        </li>
-                        <li id="3answ" class="answ">
-                            3
-                        </li>
-                        <li id="4answ" class="answ">
-                            4
-                        </li>
-                        <li id="5answ" class="answ">
-                            5
-                        </li>
-                     </ul>-->
-                    <div id="skip">
-                        Пропустить вопрос
-                    </div>
+
                 </div>
             </section>
             <section class="rightBlock">
@@ -118,6 +81,37 @@
                 &copy 2014 k1slim
             </footer>
         </section>
+
+        <script id="templateListTest" type="text/x-handlebars-template">
+            <ul>
+                {{#each test}}
+                <li id={{@index}}test class="testStr">
+                    {{title}}
+                </li>
+                {{/each}}
+            </ul>
+
+        </script>
+
+        <script id="template" type="text/x-handlebars-template">
+            <div id="placeQuestionText">
+                {{question}}
+            </div>
+            {{#if questionImg}}
+                <img src={{questionImg}} id="placeImage" />
+            {{/if}}
+            <ul>
+                {{#each answers}}
+                <li class="answ">
+
+                </li>
+                {{/each}}
+            </ul>
+            <div id="skip">
+                Пропустить вопрос
+            </div>
+        </script>
+
         <script src="js/util.js"></script>
         <script src="js/stat.js"></script>
         <script src="js/test.js"></script>
