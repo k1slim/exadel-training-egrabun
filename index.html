@@ -7,16 +7,15 @@
         <link rel="stylesheet" type="text/css" href="css/compiled/main.css" />
         <link rel="shortcut icon" href="http://avto-russia.ru/images/favicon.ico" />
         <meta charset="utf-8" />
-        <script src="js/libraries/jquery-2.1.1.min.js"></script>
-        <script src="js/libraries/lodash.js"></script>
-        <script src="js/libraries/handlebars-v1.3.0.js"></script>
+
+        <script data-main="js/init" src="bower_components/requirejs/require.js"></script>
     </head>
     <body>
         <section class="page">
             <header class="header">
                 Тесты по правилам дорожного движения
             </header>
-            <section class="open" id="leftBlock">
+            <section id="leftBlock">
                 <div class="contentHead">
                     Доступные тесты
                 </div>
@@ -37,6 +36,11 @@
                     Итог
                 </div>
                 <div class="close" id="info">
+                    <!--Осталось:
+                    <span id="placeTimer">
+                        00.15.00
+                    </span>
+                    <br />-->
                     Активный:
                     <span id="activeQuest">
                         0
@@ -78,45 +82,13 @@
             </section>
 
             <footer class="footer">
-                &copy 2014 k1slim
+                <span>
+                    &copy 2014 k1slim
+                </span>
+                <div id="clear">
+                    &nbspX&nbsp
+                </div>
             </footer>
         </section>
-
-        <script id="templateListTest" type="text/x-handlebars-template">
-            <ul>
-                {{#each test}}
-                <li id={{@index}}test class="testStr">
-                    {{title}}
-                </li>
-                {{/each}}
-            </ul>
-
-        </script>
-
-        <script id="template" type="text/x-handlebars-template">
-            <div id="placeQuestionText">
-                {{question}}
-            </div>
-            {{#if questionImg}}
-                <img src={{questionImg}} id="placeImage" />
-            {{/if}}
-            <ul>
-                {{#each answers}}
-                <li class="answ">
-
-                </li>
-                {{/each}}
-            </ul>
-            <div id="skip">
-                Пропустить вопрос
-            </div>
-        </script>
-
-        <script src="js/util.js"></script>
-        <script src="js/stat.js"></script>
-        <script src="js/test.js"></script>
-        <script src="js/routing.js"></script>
-        <script src="js/persistence.js"></script>
-        <script src="js/constructor.js"></script>
     </body>
 </html>
