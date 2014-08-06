@@ -1,4 +1,3 @@
-
 .border(@col,@rad){
   border:1px solid @col;
   border-bottom: 2px solid @col;
@@ -6,23 +5,22 @@
 }
 .hoverMix(@bg-col,@br-col){
   background-color: @bg-col;
-  border:1px solid @br-col;
-  border-bottom: 2px solid @br-col;
+  .border(@br-col,7);
   cursor: pointer;
 }
-.contentHeadMix(@br-col,@rad,@size,@pad){
+.contentHeadMix(@bg-col,@rad,@size,@pad,@br-col){
   padding:@pad;
-  background-color: @br-col;
-  .border(#aaaaaa,@rad);
+  background-color: @bg-col;
+  .border(@br-col,@rad);
   font-size: @size;
   font-weight: bold;
 }
-.button(@br-col,@br-rad,@mrg){
-  .contentHeadMix(@br-col,@br-rad,16px,5px);
+.button(@bg-col,@br-rad,@mrg,@br-col,@h-col,@h-br-col){
+  .contentHeadMix(@bg-col,@br-rad,16px,5px,@br-col);
   margin: @mrg;
   text-align: center;
 
   &:hover{
-    .hoverMix(gray, #6a6a6a);
+    .hoverMix(@h-col,@h-br-col);
   }
 }
