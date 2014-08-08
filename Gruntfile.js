@@ -79,7 +79,6 @@ module.exports = function(grunt){
             task: {
                 options: {
                     remote:'origin',
-                    branch: 'gh-pages'
                 }
             }
         }
