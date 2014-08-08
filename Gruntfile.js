@@ -62,6 +62,13 @@ module.exports = function(grunt){
                 }
             }
         },
+        gitrebase: {
+            task: {
+                options: {
+                    branch: 'gh-pages'
+                }
+            }
+        },
         gitcommit: {
             task: {
                 options: {
@@ -71,14 +78,6 @@ module.exports = function(grunt){
                 },
                 files: {
                     src: ['Gruntfile.js']
-                }
-            }
-        },
-        gitpull: {
-            task: {
-                options: {
-                    remote:'origin',
-                    branch: 'gh-pages'
                 }
             }
         },
@@ -105,6 +104,6 @@ module.exports = function(grunt){
 
     grunt.registerTask('default', ['requirejs',/*'concat', 'uglify',*/ 'csso', 'jshint','handlebars']);
 
-    grunt.registerTask('git', ['gitcommit','gitpull','gitpush']);
+    grunt.registerTask('git', ['gitcommit','gitrebase','gitpush']);
 
 };
