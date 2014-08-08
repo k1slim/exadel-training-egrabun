@@ -62,6 +62,13 @@ module.exports = function(grunt){
                 }
             }
         },
+            gitcheckout: {
+                task: {
+                    options: {
+                        branch: ' gh-pages'
+                    }
+                }
+            },
         gitcommit: {
             task: {
                 options: {
@@ -96,6 +103,6 @@ module.exports = function(grunt){
 
     grunt.registerTask('default', ['requirejs',/*'concat', 'uglify',*/ 'csso', 'jshint','handlebars']);
 
-    grunt.registerTask('git', ['gitcommit','gitpush']);
+    grunt.registerTask('git', ['gitcommit','gitcheckout','gitpush']);
 
 };
