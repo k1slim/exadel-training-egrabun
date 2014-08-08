@@ -77,7 +77,8 @@ module.exports = function(grunt){
         gitpush: {
             task: {
                 options: {
-                    branch: 'gh-pages'
+                    branch: 'gh-pages',
+                    remote:'origin'
                 }
             }
         }
