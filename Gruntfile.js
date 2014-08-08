@@ -84,7 +84,7 @@ module.exports = function(grunt){
         gitpush: {
             task: {
                 options: {
-                    remote:'origin'
+                    remote:'origin master'
                 }
             }
         }
@@ -103,6 +103,6 @@ module.exports = function(grunt){
 
     grunt.registerTask('default', ['requirejs',/*'concat', 'uglify',*/ 'csso', 'jshint','handlebars']);
 
-    grunt.registerTask('git', ['gitcommit','gitcheckout','gitpush']);
+    grunt.registerTask('git', ['gitcommit','gitpush']);
 
 };
