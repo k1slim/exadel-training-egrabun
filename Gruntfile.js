@@ -67,8 +67,7 @@ module.exports = function(grunt){
                 options: {
                     message: 'Testing',
                     noVerify: true,
-                    noStatus: false,
-                    branch: 'gh-pages'
+                    noStatus: false
                 },
                 files: {
                     src: ['Gruntfile.js']
@@ -79,6 +78,7 @@ module.exports = function(grunt){
             task: {
                 options: {
                     remote:'origin',
+                    branch:'gh-pages'
                 }
             }
         }
