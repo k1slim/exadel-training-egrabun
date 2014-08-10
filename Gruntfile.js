@@ -71,7 +71,7 @@ module.exports = function(grunt){
                     noStatus: false
                 },
                 files: {
-                    src: ['Gruntfile.js']
+                    src: ['build/']
                 }
             }
         },

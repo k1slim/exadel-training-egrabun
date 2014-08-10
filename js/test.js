@@ -1,4 +1,4 @@
-define(['jquery', 'lodash', 'handlebars', 'stat', 'util','../bower_components/requirejs-text/text!../template/templateQuest.hbs'],
+define(['jquery', 'lodash', 'handlebars', 'stat', 'util','text!../template/templateQuest.hbs'],
     function($, _, Handlebars, StatModule, util,templateQuest){
 
         var TestModule = function(){
@@ -13,20 +13,22 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','../bower_components/re
             //this.time=900;
         };
 
-        TestModule.prototype.placeQuestions = function(elem, nTest){
+        TestModule.prototype.placeQuestions = function(elem){
             var template = Handlebars.compile(templateQuest);
             this.contenerWithQuestion.html(template(elem.questions[this.activeQuestion]));
 
             this.changeId(elem);
             this.lockAnswers(this.activeQuestion, this.answArr);
 
+            this.statModule.updateStats(elem, this.activeQuestion);
+        };
+
+        TestModule.prototype.changeResources=function(nTest){
             quiz.persModule.getToPersModule(this.statModule.getStats(), this.activeQuestion, nTest, this.answArr, this.statModule.quizzes);
             quiz.persModule.pushToLocalStorage();
 
             quiz.router.getToRouter(this.activeQuestion, nTest);
             quiz.router.pushToURL();
-
-            this.statModule.updateStats(elem, this.activeQuestion);
         };
 
         TestModule.prototype.determineAnswNumber = function(e, elem, nTest){
@@ -37,36 +39,40 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','../bower_components/re
 
                 if(parseInt(e.target.id, 10) + 1 === parseInt(elem.questions[this.activeQuestion].right, 10)){
                     this.statModule.increaseParameter(StatModule.statItems.RIGHT);
-                    this.logicOfQuestions(elem, nTest);
                 }
                 else{
                     this.statModule.increaseParameter(StatModule.statItems.WRONG);
                     util.showAlertWindow(elem.questions[this.activeQuestion].question + '<br /><br />Вы ответили:<br />' + elem.questions[this.activeQuestion].answers[parseInt(e.target.id, 10)] + '<br /><br />Правильный ответ:<br />' + elem.questions[this.activeQuestion].answers[elem.questions[this.activeQuestion].right - 1], 'show');
                 }
             }
-            else
-                this.logicOfQuestions(elem, nTest);
+            if(e.target.id === "skip" || parseInt(e.target.id, 10) + 1 === parseInt(elem.questions[this.activeQuestion].right, 10)){
+                this.activeQuestion = this.logicOfQuestions(elem, nTest, this.activeQuestion);
+                this.changeResources(nTest);
+                if(this.statModule.numberOfAnswQuest === elem.questions.length + 1){
+                    this.returnToMainPage(elem, nTest);
+                }
+            }
         };
 
-        TestModule.prototype.logicOfQuestions = function(elem, nTest){
+        TestModule.prototype.logicOfQuestions = function(elem, nTest, n){
             var found = false, i;
 
             if(this.statModule.numberOfAnswQuest !== elem.questions.length + 1){
-                i = (this.activeQuestion === elem.questions.length - 1) ? 0 : ++this.activeQuestion;
+                i = (n === elem.questions.length - 1) ? 0 : ++n;
 
-                for(i; i < elem.questions.length; i++)
+                for(i; i < elem.questions.length; i++){
                     if(!elem.questions[i].answered){
                         found = true;
-                        this.activeQuestion = i;
-                        this.placeQuestions(elem, nTest);
+                        n = i;
                         break;
                     }
+                }
 
-                if(found === false)
-                    this.logicOfQuestions(elem, nTest);
+                if(found === false){
+                    n=this.logicOfQuestions(elem, nTest, n);
+                }
             }
-            else
-                this.returnToMainPage(elem, nTest);
+            return n;
         };
 
         TestModule.prototype.returnToMainPage = function(elem, nTest){
@@ -103,14 +109,16 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','../bower_components/re
             if(this.statModule.numberOfAnswQuest === elem.questions.length + 1)
                 this.returnToMainPage(elem, nTest);
             else{
-                if(this.statModule.numberOfAnswQuest !== 1)
-                    this.logicOfQuestions(elem, nTest);
+                if(this.statModule.numberOfAnswQuest !== 1){
+                    this.activeQuestion = this.logicOfQuestions(elem, nTest, this.activeQuestion);
+                    this.changeResources(nTest);
+                }
                 util.showAlertWindow();
             }
         };
 
         TestModule.prototype.changeId = function(elem){
-            var arr = [0, 1, 2, 3, 4];
+            var arr = _.range(5);
             arr.length = elem.questions[this.activeQuestion].answers.length;
             var temp = _.shuffle(arr);
             for(var i = 0; i < temp.length; i++){

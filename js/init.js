@@ -4,6 +4,7 @@ require.config({
         'jquery': '../bower_components/jquery/dist/jquery.min',
         'handlebars': '../bower_components/handlebars/handlebars',
         'lodash': '../bower_components/lodash/dist/lodash',
+        'text' : '../bower_components/requirejs-text/text',
 
         'constructor': 'constructor',
         'test': 'test',
@@ -24,5 +25,4 @@ require.config({
 require(['constructor'], function(ConstModule){
     quiz = ConstModule;
     quiz.init();
-
 });

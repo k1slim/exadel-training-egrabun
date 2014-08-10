@@ -20,7 +20,7 @@ define(['jquery', 'lodash'],
                 right: this.rightAnsw,
                 wrong: this.wrongAnsw,
                 number: this.numberOfAnswQuest
-            }
+            };
         };
 
         StatModule.prototype.getToStatsModule = function(rAnsw, wAnsw, nQuest){
@@ -65,7 +65,9 @@ define(['jquery', 'lodash'],
         StatModule.prototype.updatePassedTestMarker = function(){
             _.forEach(this.quizzes, function(num){
                 var elm = ($('#' + num + 'test'));
+                /* jshint ignore:start */
                 (elm.html().indexOf('✔') === -1) ? elm.append('  ✔') : false;
+                /* jshint ignore:end */
             });
         };
 

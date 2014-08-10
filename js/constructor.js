@@ -1,4 +1,4 @@
-define(['jquery', 'lodash', 'handlebars', 'test', 'persistence', 'routing', '../bower_components/requirejs-text/text!../template/templateListTest.hbs'],
+define(['jquery', 'lodash', 'handlebars', 'test', 'persistence', 'routing', 'text!../template/templateListTest.hbs'],
     function($, _, Handlebars, TestModule, PersModule, Router, templateListTest){
 
         var QuizzApp = function(){
@@ -19,8 +19,7 @@ define(['jquery', 'lodash', 'handlebars', 'test', 'persistence', 'routing', '../
             $('#back').show();
             $('#info').show();
 
-            $('#titlePlaceholder').html(this.data[this.numberOfTest].title);
-            this.testModule.placeQuestions(this.data[this.numberOfTest], this.numberOfTest);
+            this.testModule.changeResources(this.numberOfTest);
             //this.testModule.time=900;
             //this.testModule.timer(this.testModule.time,$('#placeTimer'),this.data[this.numberOfTest], this.numberOfTest);
         };

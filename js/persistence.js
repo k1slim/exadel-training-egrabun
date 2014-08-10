@@ -24,7 +24,7 @@ define(
         };
 
         PersModule.prototype.checkLocalStorage = function(){
-            return localStorage['quizzer'];
+            return localStorage.quizzer;
         };
 
         PersModule.prototype.parseLocalStorage = function(){
