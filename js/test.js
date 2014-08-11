@@ -1,12 +1,10 @@
-define(['jquery', 'lodash', 'handlebars', 'stat', 'util','text!../template/templateQuest.hbs'],
-    function($, _, Handlebars, StatModule, util,templateQuest){
+define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util','text!../template/templateQuest.hbs'],
+    function($, _, Handlebars, StatModule, PersModule, Router, util, templateQuest){
 
         var TestModule = function(){
             this.contenerWithQuestion = $('.textQuest');
             this.popUpCloseButton = $('#closedAlertWindow');
             this.backButton = $('#back');
-
-            this.statModule = new StatModule();
 
             this.activeQuestion = 0;
             this.answArr = [];
@@ -20,35 +18,35 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','text!../template/templ
             this.changeId(elem);
             this.lockAnswers(this.activeQuestion, this.answArr);
 
-            this.statModule.updateStats(elem, this.activeQuestion);
+            StatModule.updateStats(elem, this.activeQuestion);
         };
 
         TestModule.prototype.changeResources=function(nTest){
-            quiz.persModule.getToPersModule(this.statModule.getStats(), this.activeQuestion, nTest, this.answArr, this.statModule.quizzes);
-            quiz.persModule.pushToLocalStorage();
+            PersModule.getToPersModule(StatModule.getStats(), this.activeQuestion, nTest, this.answArr, StatModule.quizzes);
+            PersModule.pushToLocalStorage();
 
-            quiz.router.getToRouter(this.activeQuestion, nTest);
-            quiz.router.pushToURL();
+            Router.getToRouter(this.activeQuestion, nTest);
+            Router.pushToURL();
         };
 
         TestModule.prototype.determineAnswNumber = function(e, elem, nTest){
             if(e.target.id !== 'skip'){
-                this.statModule.increaseParameter(StatModule.statItems.NUMBER);
+                StatModule.increaseParameter(StatModule.statItems.NUMBER);
                 elem.questions[this.activeQuestion].answered = 1;
                 this.answArr.push(this.activeQuestion);
 
                 if(parseInt(e.target.id, 10) + 1 === parseInt(elem.questions[this.activeQuestion].right, 10)){
-                    this.statModule.increaseParameter(StatModule.statItems.RIGHT);
+                    StatModule.increaseParameter(StatModule.statItems.RIGHT);
                 }
                 else{
-                    this.statModule.increaseParameter(StatModule.statItems.WRONG);
+                    StatModule.increaseParameter(StatModule.statItems.WRONG);
                     util.showAlertWindow(elem.questions[this.activeQuestion].question + '<br /><br />Вы ответили:<br />' + elem.questions[this.activeQuestion].answers[parseInt(e.target.id, 10)] + '<br /><br />Правильный ответ:<br />' + elem.questions[this.activeQuestion].answers[elem.questions[this.activeQuestion].right - 1], 'show');
                 }
             }
             if(e.target.id === "skip" || parseInt(e.target.id, 10) + 1 === parseInt(elem.questions[this.activeQuestion].right, 10)){
                 this.activeQuestion = this.logicOfQuestions(elem, nTest, this.activeQuestion);
                 this.changeResources(nTest);
-                if(this.statModule.numberOfAnswQuest === elem.questions.length + 1){
+                if(StatModule.numberOfAnswQuest === elem.questions.length + 1){
                     this.returnToMainPage(elem, nTest);
                 }
             }
@@ -57,7 +55,7 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','text!../template/templ
         TestModule.prototype.logicOfQuestions = function(elem, nTest, n){
             var found = false, i;
 
-            if(this.statModule.numberOfAnswQuest !== elem.questions.length + 1){
+            if(StatModule.numberOfAnswQuest !== elem.questions.length + 1){
                 i = (n === elem.questions.length - 1) ? 0 : ++n;
 
                 for(i; i < elem.questions.length; i++){
@@ -76,13 +74,13 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','text!../template/templ
         };
 
         TestModule.prototype.returnToMainPage = function(elem, nTest){
-            if(this.statModule.numberOfAnswQuest === elem.questions.length + 1){
-                if(this.statModule.rightAnsw >= this.statModule.numberOfAnswQuest - 2){
-                    util.showAlertWindow('Молодeц ,правильных ответов - ' + this.statModule.rightAnsw + '/' + (this.statModule.numberOfAnswQuest - 1) + '.<br />Тест сдан!', 'show');
-                    this.statModule.markPassedTest(nTest);
+            if(StatModule.numberOfAnswQuest === elem.questions.length + 1){
+                if(StatModule.rightAnsw >= StatModule.numberOfAnswQuest - 2){
+                    util.showAlertWindow('Молодeц ,правильных ответов - ' + StatModule.rightAnsw + '/' + (StatModule.numberOfAnswQuest - 1) + '.<br />Тест сдан!', 'show');
+                    StatModule.markPassedTest(nTest);
                 }
                 else
-                    util.showAlertWindow('Не молодeц ,правильных ответов - ' + this.statModule.rightAnsw + '/' + (this.statModule.numberOfAnswQuest - 1) + '.<br />Тест не сдан!', 'show');
+                    util.showAlertWindow('Не молодeц ,правильных ответов - ' + StatModule.rightAnsw + '/' + (StatModule.numberOfAnswQuest - 1) + '.<br />Тест не сдан!', 'show');
             }
 
             $('#leftBlock').show();
@@ -92,24 +90,24 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','text!../template/templ
 
             //this.time=0;
             this.activeQuestion = 0;
-            this.statModule.resetStats();
-            this.statModule.updateStats(elem, this.activeQuestion);
+            StatModule.resetStats();
+            StatModule.updateStats(elem, this.activeQuestion);
 
             this.answArr = [];
             for(var i = 0; i < elem.questions.length; i++)
                 delete elem.questions[i].answered;
 
-            quiz.persModule.getToPersModule({}, -1, -1, [], this.statModule.quizzes);
-            quiz.persModule.pushToLocalStorage();
+            PersModule.getToPersModule({}, -1, -1, [], StatModule.quizzes);
+            PersModule.pushToLocalStorage();
 
-            quiz.router.clearUrl();
+            Router.clearUrl();
         };
 
         TestModule.prototype.defineClosedButtonAction = function(elem, nTest){
-            if(this.statModule.numberOfAnswQuest === elem.questions.length + 1)
+            if(StatModule.numberOfAnswQuest === elem.questions.length + 1)
                 this.returnToMainPage(elem, nTest);
             else{
-                if(this.statModule.numberOfAnswQuest !== 1){
+                if(StatModule.numberOfAnswQuest !== 1){
                     this.activeQuestion = this.logicOfQuestions(elem, nTest, this.activeQuestion);
                     this.changeResources(nTest);
                 }
@@ -185,7 +183,6 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'util','text!../template/templ
 
          };*/
 
-
-        return TestModule;
+        return new TestModule();
 
     });

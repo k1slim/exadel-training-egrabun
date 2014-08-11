@@ -36,7 +36,6 @@ define(
                 this.getToPersModule({}, -1, -1, [], []);
         };
 
-
-        return PersModule;
+        return new PersModule();
 
     });

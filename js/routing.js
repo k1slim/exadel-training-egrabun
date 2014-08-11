@@ -45,7 +45,6 @@ define(
                 this.actQuest = 0;
         };
 
-
-        return Router;
+        return new Router();
 
     });

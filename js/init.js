@@ -1,4 +1,3 @@
-var quiz;
 require.config({
     paths: {
         'jquery': '../bower_components/jquery/dist/jquery.min',
@@ -23,6 +22,6 @@ require.config({
 });
 
 require(['constructor'], function(ConstModule){
-    quiz = ConstModule;
+    var quiz = ConstModule;
     quiz.init();
 });

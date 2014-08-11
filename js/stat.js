@@ -9,7 +9,7 @@ define(['jquery', 'lodash'],
             this.quizzes = [];
         };
 
-        StatModule.statItems = {
+        StatModule.prototype.statItems = {
             NUMBER: 1,
             RIGHT: 2,
             WRONG: 3
@@ -78,6 +78,6 @@ define(['jquery', 'lodash'],
         };
 
 
-        return StatModule;
+        return new StatModule();
 
     });
