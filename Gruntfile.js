@@ -10,7 +10,7 @@ module.exports = function(grunt){
                     mainConfigFile: "js/init.js",
                     name: "init",
                     include: ['init'],
-                    exclude:['jquery','lodash','handlebars','text'],
+                    exclude: ['jquery', 'lodash', 'handlebars', 'text'],
                     out: "build/js/production.js"
                 }
             }
@@ -78,8 +78,8 @@ module.exports = function(grunt){
         gitpush: {
             task: {
                 options: {
-                    remote:'origin',
-                    branch:'gh-pages'
+                    remote: 'origin',
+                    branch: 'gh-pages'
                 }
             }
         },
@@ -166,7 +166,24 @@ module.exports = function(grunt){
                     }
                 ]
             }
+        },
+        jasmine: {
+            main: {
+                src: 'constructor.js',
+                options: {
+                    specs: 'spec/spec.js',
+                    keepRunner: true,
+                    template: require('grunt-template-jasmine-requirejs'),
+                    templateOptions: {
+                        requireConfigFile: 'js/init.js',
+                        requireConfig: {
+                            baseUrl: 'js/'
+                        }
+                    }
+                }
+            }
         }
+
 
     });
 
@@ -181,8 +198,10 @@ module.exports = function(grunt){
 
     grunt.loadNpmTasks('grunt-git');
 
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-    grunt.registerTask('build', ['jshint','copy','uglify','requirejs', 'csso','replace'/*,'handlebars'*/]);
-    grunt.registerTask('git', ['gitcommit','gitpush']);
+    grunt.registerTask('build', ['jshint', 'copy', 'uglify', 'requirejs', 'csso', 'replace'/*,'handlebars'*/]);
+    grunt.registerTask('git', ['gitcommit', 'gitpush']);
+    grunt.registerTask('test', ['jasmine']);
 
 };

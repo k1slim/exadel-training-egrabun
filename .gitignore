@@ -2,4 +2,7 @@
 css/compiled/*
 oldVersion/*
 bower_components/*
-build/*
+.grunt/*
+node_modules/*
+spec/*
+_SpecRunner.html

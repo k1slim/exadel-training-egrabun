@@ -1,5 +1,5 @@
-define(['jquery', 'lodash', 'handlebars', 'test','stat', 'persistence', 'routing', 'text!../template/templateListTest.hbs'],
-    function($, _, Handlebars, TestModule, StatModule, PersModule, Router, templateListTest){
+define(['jquery', 'lodash', 'handlebars', 'test', 'stat', 'persistence', 'routing', 'text!../template/templateListTest.hbs'],
+    function($, _, Handlebars, testModule, statModule, persModule, router, templateListTest){
 
         var QuizzApp = function(){
             this.contenerWithTests = $('.listTest');
@@ -15,9 +15,9 @@ define(['jquery', 'lodash', 'handlebars', 'test','stat', 'persistence', 'routing
             $('#back').show();
             $('#info').show();
 
-            TestModule.changeResources(this.numberOfTest);
-            //this.testModule.time=900;
-            //this.testModule.timer(this.testModule.time,$('#placeTimer'),this.data[this.numberOfTest], this.numberOfTest);
+            testModule.changeResources(this.numberOfTest);
+//            testModule.time=900;
+//            testModule.timer(testModule.time,$('#placeTimer'),this.data[this.numberOfTest], this.numberOfTest);
         };
 
         QuizzApp.prototype.determineTestNumber = function(e){
@@ -40,20 +40,21 @@ define(['jquery', 'lodash', 'handlebars', 'test','stat', 'persistence', 'routing
             this.contenerWithTests.html(template({test: this.data}));
 
             window.addEventListener("hashchange", function(){
-                Router.parseUrl();
+                router.parseUrl();
+                console.log(router.actQuest);
                 self.pushDataToApp();
             });
             this.contenerWithTests.on("click", ".testStr", function(evt){
                 self.determineTestNumber(evt);
             });
-            TestModule.contenerWithQuestion.on("click", ".answ, #skip", function(evt){
-                TestModule.determineAnswNumber(evt, self.data[self.numberOfTest], self.numberOfTest);
+            testModule.contenerWithQuestion.on("click", ".answ, #skip", function(evt){
+                testModule.determineAnswNumber(evt, self.data[self.numberOfTest], self.numberOfTest);
             });
-            TestModule.popUpCloseButton.on("click", function(){
-                TestModule.defineClosedButtonAction(self.data[self.numberOfTest], self.numberOfTest);
+            testModule.popUpCloseButton.on("click", function(){
+                testModule.defineClosedButtonAction(self.data[self.numberOfTest], self.numberOfTest);
             });
-            TestModule.backButton.on("click", function(){
-                TestModule.returnToMainPage(self.data[self.numberOfTest], self.numberOfTest);
+            testModule.backButton.on("click", function(){
+                testModule.returnToMainPage(self.data[self.numberOfTest], self.numberOfTest);
             });
             this.clearButton.on("click", function(){
                 localStorage.removeItem('quizzer');
@@ -61,7 +62,7 @@ define(['jquery', 'lodash', 'handlebars', 'test','stat', 'persistence', 'routing
 
             this.pushDataToApp();
 
-            if(PersModule.actTest !== -1 || Router.actQuest !== -1){
+            if(persModule.actTest !== -1 || router.actQuest !== -1){
                 this.openTest();
             }
 
@@ -77,36 +78,42 @@ define(['jquery', 'lodash', 'handlebars', 'test','stat', 'persistence', 'routing
         };
 
         QuizzApp.prototype.pushDataToApp = function(){
-            StatModule.getToStatsModuleQuizzes(PersModule.passedTest);
-            StatModule.updatePassedTestMarker();
+            statModule.getToStatsModuleQuizzes(persModule.passedTest);
+            statModule.updatePassedTestMarker();
 
-            if(PersModule.actTest !== -1){
-                this.getToConst(PersModule.actTest);
-                StatModule.getToStatsModule(PersModule.stat.right, PersModule.stat.wrong, PersModule.stat.number);
-                TestModule.getToTestModule(PersModule.actQuest, PersModule.answArray);
+            if(persModule.actTest !== -1){
+                this.getToConst(persModule.actTest);
+                statModule.getToStatsModule(persModule.stat.right, persModule.stat.wrong, persModule.stat.number);
+                testModule.getToTestModule(persModule.actQuest, persModule.answArray/*,persModule.timePers*/);
 
-                for(var i = 0; i < TestModule.answArr.length; i++) {
-                    this.data[this.numberOfTest].questions[TestModule.answArr[i]].answered = 1;
+                for(var i = 0; i < testModule.answArr.length; i++){
+                    this.data[this.numberOfTest].questions[testModule.answArr[i]].answered = 1;
                 }
             }
 
-            if(Router.actQuest !== -1){
-                Router.urlValidation(this.data);
-                this.getToConst(Router.actTest);
-                TestModule.activeQuestion = Router.actQuest;
+            if(router.actQuest !== -1){
+                router.urlValidation(this.data);
+                this.getToConst(router.actTest);
+                testModule.activeQuestion = router.actQuest;
             }
 
-            if(PersModule.actTest !== -1 && Router.actTest !== -1){
-                if(Router.actTest !== PersModule.actTest){
-                    StatModule.resetStats();
-                    TestModule.answArr = [];
-                    PersModule.getToPersModule({}, -1, -1, [], StatModule.quizzes);
-                    PersModule.pushToLocalStorage();
+            if(persModule.actTest !== -1 && router.actTest !== -1){
+                if(router.actTest !== persModule.actTest){
+                    statModule.resetStats();
+                    testModule.answArr = [];
+                    persModule.getToPersModule({}, -1, -1, [], statModule.quizzes/*, 0*/);
+                    persModule.pushToLocalStorage();
                 }
             }
-            if(PersModule.actTest !== -1 || Router.actQuest !== -1){
+
+            if(persModule.actTest !== -1 || router.actQuest !== -1){
+                $('#leftBlock').hide();
+                $('#question').show();
+                $('#back').show();
+                $('#info').show();
+
                 $('#titlePlaceholder').html(this.data[this.numberOfTest].title);
-                TestModule.placeQuestions(this.data[this.numberOfTest], this.numberOfTest);
+                testModule.placeQuestions(this.data[this.numberOfTest], this.numberOfTest);
             }
         };
 

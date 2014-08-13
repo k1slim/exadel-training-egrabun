@@ -72,6 +72,9 @@ define(['jquery', 'lodash'],
         };
 
         StatModule.prototype.markPassedTest = function(n){
+            if(this.quizzes===undefined){
+                this.quizzes = [];
+            }
             this.quizzes.push(n);
             this.quizzes = _.uniq(this.quizzes);
             this.updatePassedTestMarker();

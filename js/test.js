@@ -1,5 +1,5 @@
-define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util','text!../template/templateQuest.hbs'],
-    function($, _, Handlebars, StatModule, PersModule, Router, util, templateQuest){
+define(['jquery', 'lodash', 'handlebars', 'stat', 'persistence', 'routing', 'util', 'text!../template/templateQuest.hbs'],
+    function($, _, Handlebars, statModule, persModule, router, util, templateQuest){
 
         var TestModule = function(){
             this.contenerWithQuestion = $('.textQuest');
@@ -8,7 +8,7 @@ define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util
 
             this.activeQuestion = 0;
             this.answArr = [];
-            //this.time=900;
+//            this.time = 900;
         };
 
         TestModule.prototype.placeQuestions = function(elem){
@@ -18,45 +18,45 @@ define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util
             this.changeId(elem);
             this.lockAnswers(this.activeQuestion, this.answArr);
 
-            StatModule.updateStats(elem, this.activeQuestion);
+            statModule.updateStats(elem, this.activeQuestion);
         };
 
-        TestModule.prototype.changeResources=function(nTest){
-            PersModule.getToPersModule(StatModule.getStats(), this.activeQuestion, nTest, this.answArr, StatModule.quizzes);
-            PersModule.pushToLocalStorage();
+        TestModule.prototype.changeResources = function(nTest){
+            persModule.getToPersModule(statModule.getStats(), this.activeQuestion, nTest, this.answArr/*, statModule.quizzes,this.time*/);
+            persModule.pushToLocalStorage();
 
-            Router.getToRouter(this.activeQuestion, nTest);
-            Router.pushToURL();
+            router.getToRouter(this.activeQuestion, nTest);
+            router.pushToURL();
         };
 
         TestModule.prototype.determineAnswNumber = function(e, elem, nTest){
             if(e.target.id !== 'skip'){
-                StatModule.increaseParameter(StatModule.statItems.NUMBER);
+                statModule.increaseParameter(statModule.statItems.NUMBER);
                 elem.questions[this.activeQuestion].answered = 1;
                 this.answArr.push(this.activeQuestion);
 
                 if(parseInt(e.target.id, 10) + 1 === parseInt(elem.questions[this.activeQuestion].right, 10)){
-                    StatModule.increaseParameter(StatModule.statItems.RIGHT);
+                    statModule.increaseParameter(statModule.statItems.RIGHT);
                 }
                 else{
-                    StatModule.increaseParameter(StatModule.statItems.WRONG);
+                    statModule.increaseParameter(statModule.statItems.WRONG);
                     util.showAlertWindow(elem.questions[this.activeQuestion].question + '<br /><br />Вы ответили:<br />' + elem.questions[this.activeQuestion].answers[parseInt(e.target.id, 10)] + '<br /><br />Правильный ответ:<br />' + elem.questions[this.activeQuestion].answers[elem.questions[this.activeQuestion].right - 1], 'show');
                 }
             }
             if(e.target.id === "skip" || parseInt(e.target.id, 10) + 1 === parseInt(elem.questions[this.activeQuestion].right, 10)){
-                this.activeQuestion = this.logicOfQuestions(elem, nTest, this.activeQuestion);
+                this.activeQuestion = this.logicOfQuestions(elem, this.activeQuestion);
                 this.changeResources(nTest);
-                if(StatModule.numberOfAnswQuest === elem.questions.length + 1){
+                if(statModule.numberOfAnswQuest === elem.questions.length + 1){
                     this.returnToMainPage(elem, nTest);
                 }
             }
         };
 
-        TestModule.prototype.logicOfQuestions = function(elem, nTest, n){
+        TestModule.prototype.logicOfQuestions = function(elem, n){
             var found = false, i;
 
-            if(StatModule.numberOfAnswQuest !== elem.questions.length + 1){
-                i = (n === elem.questions.length - 1) ? 0 : ++n;
+            if(statModule.numberOfAnswQuest !== elem.questions.length + 1){
+                i = (n < 0 || n >= elem.questions.length - 1) ? 0 : ++n;
 
                 for(i; i < elem.questions.length; i++){
                     if(!elem.questions[i].answered){
@@ -67,20 +67,20 @@ define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util
                 }
 
                 if(found === false){
-                    n=this.logicOfQuestions(elem, nTest, n);
+                    n = this.logicOfQuestions(elem, n);
                 }
             }
             return n;
         };
 
         TestModule.prototype.returnToMainPage = function(elem, nTest){
-            if(StatModule.numberOfAnswQuest === elem.questions.length + 1){
-                if(StatModule.rightAnsw >= StatModule.numberOfAnswQuest - 2){
-                    util.showAlertWindow('Молодeц ,правильных ответов - ' + StatModule.rightAnsw + '/' + (StatModule.numberOfAnswQuest - 1) + '.<br />Тест сдан!', 'show');
-                    StatModule.markPassedTest(nTest);
+            if(statModule.numberOfAnswQuest === elem.questions.length + 1){
+                if(statModule.rightAnsw >= statModule.numberOfAnswQuest - 2){
+                    util.showAlertWindow('Молодeц ,правильных ответов - ' + statModule.rightAnsw + '/' + (statModule.numberOfAnswQuest - 1) + '.<br />Тест сдан!', 'show');
+                    statModule.markPassedTest(nTest);
                 }
                 else
-                    util.showAlertWindow('Не молодeц ,правильных ответов - ' + StatModule.rightAnsw + '/' + (StatModule.numberOfAnswQuest - 1) + '.<br />Тест не сдан!', 'show');
+                    util.showAlertWindow('Не молодeц ,правильных ответов - ' + statModule.rightAnsw + '/' + (statModule.numberOfAnswQuest - 1) + '.<br />Тест не сдан!', 'show');
             }
 
             $('#leftBlock').show();
@@ -88,27 +88,27 @@ define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util
             $('#back').hide();
             $('#info').hide();
 
-            //this.time=0;
+//            this.time = 0;
             this.activeQuestion = 0;
-            StatModule.resetStats();
-            StatModule.updateStats(elem, this.activeQuestion);
+            statModule.resetStats();
+            statModule.updateStats(elem, this.activeQuestion);
 
             this.answArr = [];
             for(var i = 0; i < elem.questions.length; i++)
                 delete elem.questions[i].answered;
 
-            PersModule.getToPersModule({}, -1, -1, [], StatModule.quizzes);
-            PersModule.pushToLocalStorage();
+            persModule.getToPersModule({}, -1, -1, [], statModule.quizzes/*,0*/);
+            persModule.pushToLocalStorage();
 
-            Router.clearUrl();
+            router.clearUrl();
         };
 
         TestModule.prototype.defineClosedButtonAction = function(elem, nTest){
-            if(StatModule.numberOfAnswQuest === elem.questions.length + 1)
+            if(statModule.numberOfAnswQuest === elem.questions.length + 1)
                 this.returnToMainPage(elem, nTest);
             else{
-                if(StatModule.numberOfAnswQuest !== 1){
-                    this.activeQuestion = this.logicOfQuestions(elem, nTest, this.activeQuestion);
+                if(statModule.numberOfAnswQuest !== 1){
+                    this.activeQuestion = this.logicOfQuestions(elem, this.activeQuestion);
                     this.changeResources(nTest);
                 }
                 util.showAlertWindow();
@@ -125,9 +125,10 @@ define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util
             }
         };
 
-        TestModule.prototype.getToTestModule = function(aQuest, aArr){
+        TestModule.prototype.getToTestModule = function(aQuest, aArr/*, time*/){
             this.activeQuestion = aQuest;
             this.answArr = aArr;
+//            this.time=time;
         };
 
         TestModule.prototype.lockAnswers = function(aQuest, aArr){
@@ -141,9 +142,12 @@ define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util
             }
         };
 
-        /*TestModule.prototype.timer = function(sec, block, elem, nTest){
+        /* TestModule.prototype.timer = function(sec, block, elem, nTest){
          var self = this,
          time = sec;
+
+         if(this.time === 0)
+         return;
 
          console.log(sec);
 
@@ -168,9 +172,8 @@ define(['jquery', 'lodash', 'handlebars', 'stat','persistence', 'routing', 'util
          block.html(hour + ':' + minutes + ':' + seconds);
 
          sec--;
-
-         if(this.time===0)
-         return;
+         this.time = sec;
+         console.log('t=', this.time);
 
          if(sec > 0){
          setTimeout(function(){
