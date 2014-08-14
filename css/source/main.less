@@ -9,24 +9,27 @@
 }
 
 html{
-  background-color: gray;
+  background-color:gray;
 }
-.page {
+.page{
   font-family:calibri;
   width:1000px;
   margin:0 auto;
-  background-color: whitesmoke;
+  background-color:whitesmoke;
 }
-.header {
+.header{
   display:block;
   background-color:#44d1ff;
   border-bottom:2px solid #3bb5ff;
   height:45px;
   padding:10px;
-  text-align: center;
-  font-size: 30px;
+  text-align:center;
+  font-size:30px;
 }
-#leftBlock,#question{
+.loadDataScreen{
+  margin:100px 274px;
+}
+#leftBlock, #question{
   position:relative;
   float:left;
   width:600px;
@@ -34,35 +37,35 @@ html{
   padding:10px;
 }
 .contentHead{
-  .contentHeadMix(@border-col,@border-rad,20px,10px 21px,#aaaaaa);
+  .contentHeadMix(@border-col, @border-rad, 20px, 10px 21px, #aaaaaa);
 }
 .listTest{
 
   ul{
-    list-style: none;
+    list-style:none;
     margin:15px 0 0 20px;
     padding:0px;
 
     li{
-      .border(@border-col,@border-rad);
+      .border(@border-col, @border-rad);
       margin:7px 0;
       padding:10px;
       //box-shadow:inset 0 -20px 10px -5px rgb(230, 230, 230);
 
       &:hover{
-        .hoverMix(@hover-background-col,@hover-border-col);
+        .hoverMix(@hover-background-col, @hover-border-col);
         //box-shadow: inset 0 -20px 10px -5px #97E2EE;
       }
     }
   }
 }
 .textQuest{
-  .border(@border-col,@border-rad);
+  .border(@border-col, @border-rad);
   margin:15px 0 0 0px;
   padding:15px;
 
   div:first-child{
-    text-indent: 1.5em;
+    text-indent:1.5em;
   }
 
   img{
@@ -72,22 +75,22 @@ html{
   }
 
   ul{
-    list-style: none;
+    list-style:none;
     margin:10px 10px 0 20px;
     padding:0;
 
     li{
-      .border(@border-col,@border-rad);
+      .border(@border-col, @border-rad);
       margin:7px 0;
       padding:5px 10px;
 
       &:hover{
-        .hoverMix(@hover-background-col,@hover-border-col);
+        .hoverMix(@hover-background-col, @hover-border-col);
       }
     }
   }
   div:last-child{
-    .button(@border-col,@border-rad,0 10px 0 350px,#aaaaaa,gray, #6a6a6a);
+    .button(@border-col, @border-rad, 0 10px 0 350px, #aaaaaa, gray, #6a6a6a);
   }
 }
 .rightBlock{
@@ -98,18 +101,24 @@ html{
   padding:10px;
 
   div:last-child{
-    .button(@border-col,@border-rad,15px 0 0 0,#aaaaaa,gray, #6a6a6a);
+    .button(@border-col, @border-rad, 15px 0 0 0, #aaaaaa, gray, #6a6a6a);
   }
 }
 #info{
-  .border(@border-col,@border-rad);
+  .border(@border-col, @border-rad);
   margin:15px 0 0 0px;
   padding:15px;
 }
+#rightAnswerCounter{
+  color:green;
+}
+#wrongAnswerCounter{
+  color:red;
+}
 #alertWindow{
-  .border(@border-col,@border-rad);
-  box-shadow: 0 0 6px rgb(233, 233, 233);
-  background-color: white;
+  .border(@border-col, @border-rad);
+  box-shadow:0 0 6px rgb(233, 233, 233);
+  background-color:white;
   position:fixed;
   top:35%;
   left:50%;
@@ -119,30 +128,30 @@ html{
   z-index:3;
 
   span{
-    display: block;
-    margin-bottom: 10px;
+    display:block;
+    margin-bottom:10px;
   }
   div{
-    display: inline;
-    cursor: pointer;
+    display:inline;
+    cursor:pointer;
     color:red;
   }
 }
 #alertWindowBack{
-  height: 100%;
+  height:100%;
   width:100%;
   position:fixed;
   top:0;
   left:0;
-  background-color: black;
+  background-color:black;
   opacity:0.75;
   z-index:2;
 }
 .footer{
-  text-align: center;
+  text-align:center;
   clear:both;
   display:block;
-  background-color: #44d1ff;
+  background-color:#44d1ff;
   border-top:2px solid #3bb5ff;
   padding:12px;
 }
@@ -150,5 +159,5 @@ html{
   display:inline;
   position:relative;
   right:-420px;
-  .button(#44d1ff,@border-rad,5px, #3cb5ff, #3cb5ff, #3499ff);
+  .button(#44d1ff, @border-rad, 5px, #3cb5ff, #3cb5ff, #3499ff);
 }

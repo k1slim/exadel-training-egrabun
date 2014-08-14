@@ -15,8 +15,10 @@ define(['jquery', 'lodash', 'handlebars', 'test', 'stat', 'persistence', 'routin
             $('#back').show();
             $('#info').show();
 
+//            if(persModule.timePers===-1){
+//                testModule.time = 9;
+//            }
             testModule.changeResources(this.numberOfTest);
-//            testModule.time=900;
 //            testModule.timer(testModule.time,$('#placeTimer'),this.data[this.numberOfTest], this.numberOfTest);
         };
 
@@ -41,7 +43,6 @@ define(['jquery', 'lodash', 'handlebars', 'test', 'stat', 'persistence', 'routin
 
             window.addEventListener("hashchange", function(){
                 router.parseUrl();
-                console.log(router.actQuest);
                 self.pushDataToApp();
             });
             this.contenerWithTests.on("click", ".testStr", function(evt){
@@ -101,7 +102,8 @@ define(['jquery', 'lodash', 'handlebars', 'test', 'stat', 'persistence', 'routin
                 if(router.actTest !== persModule.actTest){
                     statModule.resetStats();
                     testModule.answArr = [];
-                    persModule.getToPersModule({}, -1, -1, [], statModule.quizzes/*, 0*/);
+//                    testModule.time=900;
+                    persModule.getToPersModule({}, -1, -1, [], statModule.quizzes/*, 900*/);
                     persModule.pushToLocalStorage();
                 }
             }

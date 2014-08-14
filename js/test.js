@@ -22,7 +22,7 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'persistence', 'routing', 'uti
         };
 
         TestModule.prototype.changeResources = function(nTest){
-            persModule.getToPersModule(statModule.getStats(), this.activeQuestion, nTest, this.answArr/*, statModule.quizzes,this.time*/);
+            persModule.getToPersModule(statModule.getStats(), this.activeQuestion, nTest, this.answArr, statModule.quizzes/*,this.time*/);
             persModule.pushToLocalStorage();
 
             router.getToRouter(this.activeQuestion, nTest);
@@ -97,7 +97,7 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'persistence', 'routing', 'uti
             for(var i = 0; i < elem.questions.length; i++)
                 delete elem.questions[i].answered;
 
-            persModule.getToPersModule({}, -1, -1, [], statModule.quizzes/*,0*/);
+            persModule.getToPersModule({}, -1, -1, [], statModule.quizzes/*,-1*/);
             persModule.pushToLocalStorage();
 
             router.clearUrl();
@@ -142,49 +142,49 @@ define(['jquery', 'lodash', 'handlebars', 'stat', 'persistence', 'routing', 'uti
             }
         };
 
-        /* TestModule.prototype.timer = function(sec, block, elem, nTest){
-         var self = this,
-         time = sec;
-
-         if(this.time === 0)
-         return;
-
-         console.log(sec);
-
-         var hour = parseInt(time / 3600);
-         if(hour < 1)
-         hour = 0;
-         time = parseInt(time - hour * 3600);
-         if(hour < 10)
-         hour = '0' + hour;
-
-         var minutes = parseInt(time / 60);
-         if(minutes < 1)
-         minutes = 0;
-         time = parseInt(time - minutes * 60);
-         if(minutes < 10)
-         minutes = '0' + minutes;
-
-         var seconds = time;
-         if(seconds < 10)
-         seconds = '0' + seconds;
-
-         block.html(hour + ':' + minutes + ':' + seconds);
-
-         sec--;
-         this.time = sec;
-         console.log('t=', this.time);
-
-         if(sec > 0){
-         setTimeout(function(){
-         self.timer(sec, block, elem, nTest)
-         }, 1000);
-         }
-         else{
-         this.returnToMainPage(elem, nTest);
-         }
-
-         };*/
+//        TestModule.prototype.timer = function(sec, block, elem, nTest){
+//            var self = this,
+//                time = sec;
+//
+//            if(this.time === 0)
+//                return;
+//
+//            console.log(sec);
+//
+//            var hour = parseInt(time / 3600);
+//            if(hour < 1)
+//                hour = 0;
+//            time = parseInt(time - hour * 3600);
+//            if(hour < 10)
+//                hour = '0' + hour;
+//
+//            var minutes = parseInt(time / 60);
+//            if(minutes < 1)
+//                minutes = 0;
+//            time = parseInt(time - minutes * 60);
+//            if(minutes < 10)
+//                minutes = '0' + minutes;
+//
+//            var seconds = time;
+//            if(seconds < 10)
+//                seconds = '0' + seconds;
+//
+//            block.html(hour + ':' + minutes + ':' + seconds);
+//
+//            sec--;
+//            this.time = sec;
+//            console.log('t=', this.time);
+//
+//            if(sec > 0){
+//                setTimeout(function(){
+//                    self.timer(sec, block, elem, nTest)
+//                }, 1000);
+//            }
+//            else{
+//                this.returnToMainPage(elem, nTest);
+//            }
+//
+//        };
 
         return new TestModule();
 

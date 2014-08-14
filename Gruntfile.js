@@ -91,6 +91,10 @@ module.exports = function(grunt){
                         dest: 'build/index.html'
                     },
                     {
+                        src: 'image/layout/ajax-loader.gif',
+                        dest: 'build/image/layout/ajax-loader.gif'
+                    },
+                    {
                         src: 'js/json/data.json',
                         dest: 'build/js/json/data.json'
                     },

@@ -1,0 +1,36 @@
+{
+  "name": "exadel-training-egrabun",
+  "version": "0.0.0",
+  "description": "http://k1slim.github.io/k1slim.github.com/",
+  "main": "index.js",
+  "dependencies": {
+    "grunt": "^0.4.5"
+  },
+  "devDependencies": {
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-handlebars": "^0.8.0",
+    "grunt-contrib-jasmine": "^0.7.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-csso": "^0.6.3",
+    "grunt-git": "^0.2.14",
+    "grunt-template-jasmine-requirejs": "^0.2.0",
+    "grunt-text-replace": "^0.3.12"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/k1slim/exadel-training-egrabun.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/k1slim/exadel-training-egrabun/issues"
+  },
+  "homepage": "https://github.com/k1slim/exadel-training-egrabun"
+}

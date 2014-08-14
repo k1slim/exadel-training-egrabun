@@ -7,7 +7,7 @@ define(
             this.actTest = -1;
             this.answArray = [];
             this.passedTest = [];
-//            this.timePers=0;
+//            this.timePers=-1;
 
             this.parseLocalStorage();
         };
@@ -35,7 +35,7 @@ define(
                 this.getToPersModule(temp.stat, temp.actQuest, temp.actTest, temp.answArray, temp.passedTest/*,temp.timePers*/);
             }
             else
-                this.getToPersModule({}, -1, -1, [], []/*,0*/);
+                this.getToPersModule({}, -1, -1, [], []/*,-1*/);
         };
 
         return new PersModule();

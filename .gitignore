@@ -4,5 +4,3 @@ oldVersion/*
 bower_components/*
 .grunt/*
 node_modules/*
-spec/*
-_SpecRunner.html
